@@ -1,0 +1,162 @@
+# Art with Nia — Supabase setup
+
+The site reads its works (paintings for sale) from a Supabase table called
+`works`. You add and edit pieces in the **Supabase dashboard → Table Editor** —
+no code changes needed once it's connected. Until you paste your credentials,
+the site falls back to the built-in sample works, so it always renders.
+
+There are **3 one-time steps**.
+
+---
+
+## 1. Run the database setup
+
+In your Supabase project → **SQL Editor** → paste and run the whole block below.
+It creates the `works` table, makes it publicly *readable* (but not writable),
+creates a public image bucket, and seeds the 8 sample works so your gallery
+isn't empty.
+
+```sql
+-- ── Works table ─────────────────────────────────────────────
+create table if not exists public.works (
+  id            text primary key,             -- url slug, e.g. 'salt-ember'
+  sort          int  not null default 0,      -- display order (low = first)
+  title         text not null,
+  year          int,
+  medium        text,
+  size          text,
+  description   text,
+  type          text not null default 'buynow',  -- 'auction' | 'buynow'
+  image_url     text,                          -- public URL from Storage (optional)
+  palette       jsonb,                         -- ["#hex","#hex","#hex"] fallback art
+  variant       text,                          -- 'field' | 'orb' | 'strata' | 'veil'
+  price         numeric,                       -- buy-now pieces
+  current_bid   numeric,                       -- auctions
+  bids          int default 0,                 -- auctions
+  closes_at     timestamptz,                   -- auctions
+  min_increment numeric default 100,           -- auctions
+  buy_now       numeric,                       -- optional buy-now price on an auction
+  ended         boolean default false,         -- auctions (auto-true once closes_at passes)
+  final_price   numeric,                       -- ended auctions
+  history       jsonb default '[]'::jsonb,     -- optional bid history
+  created_at    timestamptz default now()
+);
+
+-- ── Public can READ works, nobody can write from the browser ──
+alter table public.works enable row level security;
+drop policy if exists "Public read works" on public.works;
+create policy "Public read works" on public.works for select using (true);
+-- (No insert/update/delete policy = writes only via the dashboard / service role.)
+
+-- ── Public image bucket for artwork photos ──────────────────
+insert into storage.buckets (id, name, public)
+values ('artworks', 'artworks', true)
+on conflict (id) do nothing;
+
+drop policy if exists "Public read artworks" on storage.objects;
+create policy "Public read artworks" on storage.objects
+  for select using (bucket_id = 'artworks');
+
+-- ── Seed: the 8 sample works (edit/delete these freely later) ─
+insert into public.works
+  (id, sort, title, year, medium, size, description, type, palette, variant,
+   price, current_bid, bids, closes_at, min_increment, buy_now, ended, final_price)
+values
+  ('tidewall', 1, 'Tidewall, No. 4', 2024, 'Oil and marble dust on linen', '120 × 95 cm',
+   'Built up over four months in thin tidal layers, the surface holds the memory of every wash that came before it. Best viewed in raking afternoon light.',
+   'auction', '["#1f3a3d","#3f6b63","#cdbfa3"]', 'strata',
+   null, 4600, 14, now() + interval '1 day 6 hours 12 minutes', 100, 8500, false, null),
+
+  ('ochre-field', 2, 'Ochre Field', 2023, 'Oil on cotton canvas', '90 × 90 cm',
+   'A single field of ground ochre, scraped back and reapplied until the colour seems to emit its own warmth. Part of the Dry Season series.',
+   'buynow', '["#caa05a","#e7d3a7","#9c6b32"]', 'field',
+   3200, null, 0, null, 100, null, false, null),
+
+  ('salt-ember', 3, 'Salt & Ember', 2024, 'Pigment and ash on panel', '70 × 56 cm',
+   'Wood ash from the studio stove bound into a low, smouldering horizon. A small, intense piece meant to be lived with closely.',
+   'auction', '["#221f1d","#3a322c","#c8603a"]', 'orb',
+   null, 7800, 23, now() + interval '2 hours 47 minutes', 100, 12000, false, null),
+
+  ('quiet-meridian', 4, 'Quiet Meridian', 2022, 'Acrylic and graphite on board', '60 × 80 cm',
+   'A horizon line drawn and erased a hundred times, leaving only a soft graphite ghost across a wash of sage. Quiet and exacting.',
+   'buynow', '["#8a988b","#c2c6bd","#5f6d63"]', 'veil',
+   5400, null, 0, null, 100, null, false, null),
+
+  ('vesper', 5, 'Vesper', 2023, 'Oil on linen', '100 × 100 cm',
+   'The last of the Dusk paintings — a plum field swallowing a pale, sinking disc. Exhibited at Galeria Foz, 2024.',
+   'auction', '["#2a2336","#4a3b57","#b98aa0"]', 'orb',
+   null, 9200, 31, now() - interval '3 days', 200, null, true, 9200),
+
+  ('low-country', 6, 'Low Country', 2024, 'Mixed media on board', '110 × 80 cm',
+   'Layered greens and silt, dragged horizontally to suggest flooded fields seen from a slow train. Unframed; ready to hang.',
+   'buynow', '["#3b4a2f","#6f7d4e","#b7a378"]', 'strata',
+   2800, null, 0, null, 100, null, false, null),
+
+  ('argent', 7, 'Argent', 2024, 'Silverpoint and wash on prepared paper', '50 × 65 cm',
+   'Drawn in pure silverpoint, the metal will warm and deepen with the years. A study in restraint and patience.',
+   'auction', '["#b9bcc0","#e9e9ec","#8d9197"]', 'veil',
+   null, 3100, 9, now() + interval '21 hours 35 minutes', 50, 5200, false, null),
+
+  ('bloom-reserve', 8, 'Bloom in Reserve', 2023, 'Oil on canvas', '95 × 75 cm',
+   'A rose-clay swell held just before opening — the most colour Nia allows into a single canvas. Studio favourite, rarely shown.',
+   'buynow', '["#b06a5c","#e8c4b8","#7d4034"]', 'field',
+   6750, null, 0, null, 100, null, false, null)
+on conflict (id) do nothing;
+```
+
+---
+
+## 2. Connect the site to your project
+
+In **Project Settings → API**, copy your **Project URL** and **anon public** key.
+Open `index.html`, find this block near the top of the `<script>`, and paste them in:
+
+```js
+const SUPABASE_URL      = "https://YOUR-PROJECT.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOi...your anon public key...";
+```
+
+> The anon key is **meant** to be public and safe to commit — it can only *read*
+> the `works` table (per the policy above). It is not a secret. There is no
+> `.env` file to manage for this static site.
+
+Reload the page: the gallery now reads from your `works` table instead of the
+sample data.
+
+---
+
+## 3. Add & edit works (day-to-day)
+
+All of this happens in the Supabase dashboard — no code.
+
+**To add a painting:** Table Editor → `works` → **Insert row**. Key fields:
+
+| Field | Notes |
+|---|---|
+| `id` | a url-safe slug, e.g. `morning-tide` (lowercase, hyphens) |
+| `sort` | lower numbers show first |
+| `title`, `year`, `medium`, `size`, `description` | shown on the card + detail page |
+| `type` | `auction` or `buynow` |
+| `image_url` | the artwork photo (see below). Leave blank to use generated art |
+| **Buy-now** | set `price` |
+| **Auction** | set `current_bid`, `bids`, `closes_at`, `min_increment`, and optionally `buy_now` |
+
+**To add the photo:** Storage → `artworks` bucket → **Upload file** → click the
+file → **Copy URL** → paste it into that row's `image_url`. Portrait images look
+best (they're shown in a 4:5 / framed crop).
+
+**Auctions close automatically:** once `closes_at` is in the past, the piece shows
+as "Auction closed". To show a sold result, also set `ended = true` and
+`final_price`.
+
+> Bidding, sign-in, and "reserve / buy now" are front-end flows (no payments are
+> taken and bids aren't written back to the database). They're ready to be wired
+> to a backend later, but the **works catalog is fully live** from Supabase.
+
+---
+
+## Deploying
+
+This is a static site (one `index.html`). Host it anywhere — Vercel, Netlify,
+Cloudflare Pages, GitHub Pages — by uploading the folder or connecting a repo.
+No build step is required.

@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Art with Nia — Original Works</title>
+<meta name="description" content="Art with Nia — original paintings by New York–based muralist and visual artist Nia, offered by live auction and direct acquisition." />
+<meta name="theme-color" content="#f6f3ec" />
+<meta name="color-scheme" content="light" />
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Art with Nia — Original Works" />
+<meta property="og:description" content="Original paintings offered by live auction and direct acquisition. A New York studio — bold, intentional, emotionally driven." />
+<meta property="og:site_name" content="Art with Nia" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f6f3ec'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' fill='%23a14b35' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --paper:      #f6f3ec;   /* warm off-white ground */
+    --paper-2:    #f0ece2;   /* slightly deeper panels */
+    --wall:       #efebe2;   /* gallery wall on detail */
+    --ink:        #211f1b;   /* primary text, warm near-black */
+    --ink-2:      #56514a;   /* secondary text */
+    --muted:      #8d867a;   /* tertiary / meta */
+    --line:       #e2dccf;   /* hairlines */
+    --line-2:     #d6cfbf;
+    --accent:     #a14b35;   /* restrained terracotta */
+    --accent-ink: #8b4029;
+    --accent-tint:#f0e2db;
+
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans: "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --maxw: 1280px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+    --shadow-card: 0 1px 2px rgba(40,34,24,.04);
+    --shadow-lift: 0 22px 48px -28px rgba(40,34,24,.45);
+    --shadow-hang: 0 38px 80px -40px rgba(40,30,18,.55), 0 6px 18px -10px rgba(40,30,18,.25);
+
+    /* glass system */
+    --glass:        rgba(255,253,249,.58);
+    --glass-strong: rgba(255,253,249,.74);
+    --glass-fill:   rgba(255,255,255,.42);
+    --glass-edge:   rgba(255,255,255,.72);   /* light-catching border */
+    --glass-blur:   blur(20px) saturate(150%);
+    --glass-shadow: 0 28px 60px -34px rgba(40,30,18,.42), 0 4px 14px -8px rgba(40,30,18,.16);
+    --glass-inset:  inset 0 1px 0 rgba(255,255,255,.7);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    font-family:var(--sans);
+    background:
+      radial-gradient(820px 580px at 10% -6%, rgba(161,75,53,.07), transparent 60%),
+      radial-gradient(760px 680px at 104% 6%, rgba(72,92,112,.055), transparent 56%),
+      radial-gradient(700px 720px at 82% 112%, rgba(161,75,53,.05), transparent 60%),
+      var(--paper);
+    background-attachment:fixed;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  /* faint paper grain */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    pointer-events:none; z-index:9999;
+    opacity:.04; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; }
+  img{ display:block; max-width:100%; }
+  ::selection{ background:var(--accent-tint); }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  :focus:not(:focus-visible){ outline:none; }
+
+  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+  .serif{ font-family:var(--serif); font-weight:300; }
+  .eyebrow{
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--muted); font-weight:500;
+  }
+
+  /* ============ HEADER (two-tier) ============ */
+  header{
+    position:sticky; top:0; z-index:200;
+    background:linear-gradient(180deg, rgba(255,253,249,.66), rgba(255,253,249,.42));
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    border-bottom:1px solid transparent;
+    transition:border-color .4s var(--ease), background .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  header.scrolled{
+    border-bottom-color:var(--glass-edge);
+    background:linear-gradient(180deg, rgba(255,253,249,.86), rgba(255,253,249,.66));
+    box-shadow:0 14px 34px -26px rgba(40,30,18,.4);
+  }
+
+  /* tier 1 — live status strip */
+  .topbar{
+    overflow:hidden; max-height:44px; opacity:1;
+    border-bottom:1px solid var(--line);
+    transition:max-height .5s var(--ease), opacity .35s var(--ease), border-color .4s var(--ease);
+  }
+  header.scrolled .topbar{ max-height:0; opacity:0; border-color:transparent; }
+  .topbar-inner{ display:flex; align-items:center; justify-content:space-between; height:39px; gap:18px; }
+  .live-stat{
+    display:inline-flex; align-items:center; gap:9px; white-space:nowrap;
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+    color:var(--accent-ink); transition:opacity .3s var(--ease); cursor:pointer;
+  }
+  .live-stat:hover{ opacity:.62; }
+  .live-stat .lpulse{
+    width:6px; height:6px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 0 0 rgba(161,75,53,.5); animation:pulse 2.4s var(--ease) infinite;
+  }
+  .closing-next{
+    display:flex; align-items:center; gap:11px; white-space:nowrap;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+  }
+  .closing-next .cn-title{
+    font-family:var(--serif); font-style:italic; text-transform:none; letter-spacing:0;
+    font-size:13.5px; color:var(--ink-2); transition:color .3s var(--ease);
+  }
+  .closing-next .cn-title:hover{ color:var(--ink); }
+  .closing-next .cn-time{ font-variant-numeric:tabular-nums; color:var(--ink); letter-spacing:.06em; }
+
+  /* tier 2 — main bar */
+  .head-inner{
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center;
+    height:80px; gap:20px; transition:height .4s var(--ease);
+  }
+  header.scrolled .head-inner{ height:64px; }
+  .logo{
+    grid-column:2; justify-self:center;
+    font-family:var(--serif); color:var(--ink); line-height:1;
+    display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center;
+  }
+  .logo .mark{ font-size:27px; font-weight:400; letter-spacing:.01em; transition:font-size .4s var(--ease); }
+  header.scrolled .logo .mark{ font-size:22px; }
+  .logo .sub{
+    font-family:var(--sans); font-size:9px; letter-spacing:.36em;
+    text-transform:uppercase; color:var(--muted); font-weight:600;
+  }
+  nav.main{ grid-column:1; justify-self:start; position:relative; display:flex; gap:30px; align-items:center; }
+  nav.main a{
+    font-size:11.5px; letter-spacing:.17em; text-transform:uppercase; font-weight:500;
+    color:var(--muted); padding:6px 0; position:relative; transition:color .3s var(--ease);
+  }
+  nav.main a:hover, nav.main a.active{ color:var(--ink); }
+  .nav-ink{
+    position:absolute; left:0; bottom:-1px; height:1px; width:0; opacity:0;
+    background:var(--accent); pointer-events:none;
+    transition:transform .42s var(--ease), width .42s var(--ease), opacity .3s var(--ease);
+  }
+  .head-right{ grid-column:3; justify-self:end; display:flex; align-items:center; gap:16px; }
+  .signin-btn{
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; font-weight:600;
+    color:var(--ink); display:inline-flex; align-items:center; gap:9px;
+    padding:10px 18px; border-radius:99px; cursor:pointer;
+    background:rgba(255,255,255,.42);
+    backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
+    border:1px solid var(--glass-edge); box-shadow:var(--glass-inset);
+    transition:border-color .3s var(--ease), background .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .signin-btn:hover{ border-color:var(--ink); background:var(--ink); color:var(--paper); box-shadow:0 12px 26px -16px rgba(0,0,0,.5); }
+  .signin-btn .sdot{ width:5px; height:5px; border-radius:50%; border:1px solid currentColor; }
+  .signin-btn.block{ width:100%; justify-content:center; padding:15px; border-radius:8px; }
+
+  /* mobile menu trigger + overlay */
+  .menu-btn{
+    grid-column:3; justify-self:end; display:none; align-items:center; gap:11px;
+    border:0; background:none; padding:8px 4px; min-height:44px; color:var(--ink);
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+  }
+  .menu-btn .bars{ display:inline-flex; flex-direction:column; gap:5px; width:22px; }
+  .menu-btn .bars i{ display:block; height:1.5px; width:100%; background:var(--ink); }
+  .menu-overlay{
+    position:fixed; inset:0; z-index:350;
+    background:linear-gradient(180deg, rgba(246,243,236,.88), rgba(246,243,236,.8));
+    backdrop-filter:blur(26px) saturate(140%); -webkit-backdrop-filter:blur(26px) saturate(140%);
+    transform:translateY(-101%); visibility:hidden;
+    transition:transform .55s var(--ease), visibility .55s var(--ease);
+  }
+  .menu-overlay.open{ transform:none; visibility:visible; }
+  .menu-overlay .wrap{ display:flex; flex-direction:column; height:100%; padding-top:10px; padding-bottom:40px; }
+  .menu-top{ display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .menu-x{
+    border:0; background:none; color:var(--ink); cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:600;
+  }
+  .menu-nav{ display:flex; flex-direction:column; gap:4px; margin-top:7vh; }
+  .menu-nav a{
+    font-family:var(--serif); font-weight:300; font-size:clamp(40px,12vw,58px);
+    line-height:1.2; letter-spacing:-.01em; color:var(--ink);
+    display:flex; align-items:baseline; gap:16px;
+  }
+  .menu-nav a .idx{
+    font-family:var(--sans); font-size:12px; font-weight:600; color:var(--muted);
+    letter-spacing:.1em; transform:translateY(-2px);
+  }
+  .menu-overlay.open .menu-nav a{ animation:rise .55s var(--ease) both; }
+  .menu-overlay.open .menu-nav a:nth-child(1){ animation-delay:.10s; }
+  .menu-overlay.open .menu-nav a:nth-child(2){ animation-delay:.17s; }
+  .menu-overlay.open .menu-nav a:nth-child(3){ animation-delay:.24s; }
+  .menu-foot{ margin-top:auto; border-top:1px solid var(--line); padding-top:26px; display:flex; flex-direction:column; gap:20px; }
+  .menu-contact{ display:flex; flex-direction:column; gap:9px; }
+  .menu-contact a{ font-size:14px; color:var(--ink-2); }
+  .menu-contact a:hover{ color:var(--ink); }
+
+  /* ============ VIEW MGMT ============ */
+  .view{ display:none; }
+  .view.active{ display:block; animation:fadeIn .5s var(--ease) both; }
+  @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+  @keyframes rise{ from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
+
+  /* ============ GALLERY INTRO ============ */
+  .intro{
+    display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(36px,5vw,72px);
+    align-items:center; padding:64px 0 36px;
+  }
+  .intro .eyebrow{ animation:rise .6s var(--ease) both; }
+  .intro h1{
+    font-family:var(--serif); font-weight:300;
+    font-size:clamp(34px,5.4vw,62px); line-height:1.04;
+    letter-spacing:-.015em; margin:18px 0 0; max-width:18ch;
+    color:var(--ink); animation:rise .7s .06s var(--ease) both;
+  }
+  .intro h1 em{ font-style:italic; color:var(--ink-2); }
+  .intro p{
+    margin:22px 0 0; max-width:46ch; color:var(--ink-2);
+    font-size:15.5px; animation:rise .7s .12s var(--ease) both;
+  }
+
+  /* featured auction (hero) — artwork on top, details below */
+  .feature{ justify-self:end; width:100%; max-width:440px; animation:rise .7s .18s var(--ease) both; }
+  .feature-card{
+    position:relative; display:block; border-radius:16px; overflow:hidden;
+    background:var(--glass); border:1px solid var(--glass-edge);
+    backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+    box-shadow:var(--glass-shadow), var(--glass-inset);
+    transition:transform .6s var(--ease), box-shadow .6s var(--ease);
+  }
+  .feature-card:hover{ transform:translateY(-6px); box-shadow:0 40px 80px -34px rgba(40,30,18,.5), var(--glass-inset); }
+  .feature-media{ position:relative; }
+  .feature-media .canvas{ display:block; width:100%; aspect-ratio:4/3; }
+  .feature-media .canvas::after{
+    content:""; position:absolute; inset:0; mix-blend-mode:multiply;
+    background:radial-gradient(130% 130% at 50% 22%, transparent 46%, rgba(20,14,8,.24));
+  }
+  .feature-flag{
+    position:absolute; top:14px; left:14px; z-index:3;
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:10px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:var(--ink);
+    background:rgba(255,253,249,.72); border:1px solid var(--glass-edge); border-radius:99px; padding:7px 13px;
+    backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
+    box-shadow:var(--glass-inset);
+  }
+  .feature-flag .dot{
+    width:6px; height:6px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 0 0 rgba(161,75,53,.5); animation:pulse 2.4s var(--ease) infinite;
+  }
+  .feature-glare{
+    position:absolute; inset:0; z-index:2; pointer-events:none; mix-blend-mode:screen;
+    background:linear-gradient(125deg, rgba(255,255,255,.16) 0%, transparent 32%, transparent 100%);
+  }
+  .feature-glass{ position:relative; padding:19px 20px 20px; }
+  .feature-glass h3{ font-family:var(--serif); font-weight:400; font-size:23px; line-height:1.12; margin:0; letter-spacing:-.005em; }
+  .feature-glass .fg-meta{ font-size:12px; color:var(--ink-2); margin-top:4px; }
+  .feature-glass .fg-row{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+    margin:15px 0; padding-top:14px; border-top:1px solid var(--line);
+  }
+  .fg-bid .k, .fg-time .k{ font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  .fg-bid .v{ font-family:var(--serif); font-size:25px; line-height:1; margin-top:5px; font-variant-numeric:tabular-nums; }
+  .fg-time{ text-align:right; }
+  .fg-time .v{ font-size:18px; line-height:1; margin-top:7px; font-variant-numeric:tabular-nums; letter-spacing:.04em; color:var(--accent-ink); font-weight:600; }
+  .feature-cta{ display:flex; width:100%; align-items:center; justify-content:center; gap:9px; padding:13px; border-radius:8px; }
+  .feature-cta svg{ width:15px; height:15px; }
+  .feature-card:hover .feature-cta::after{ left:150%; }
+
+  /* filter bar */
+  .filterbar{
+    display:flex; align-items:center; gap:26px;
+    margin-top:46px; padding-bottom:18px;
+    border-bottom:1px solid var(--line);
+    animation:rise .7s .18s var(--ease) both;
+  }
+  .filterbar .count{ margin-left:auto; font-size:12px; color:var(--muted); letter-spacing:.04em; }
+  .filt{
+    background:none; border:0; padding:4px 0; font-size:13px;
+    color:var(--muted); letter-spacing:.02em; position:relative;
+    transition:color .3s var(--ease);
+  }
+  .filt::after{
+    content:""; position:absolute; left:0; bottom:-1px; height:1px; width:0;
+    background:var(--accent); transition:width .35s var(--ease);
+  }
+  .filt:hover{ color:var(--ink); }
+  .filt.active{ color:var(--ink); }
+  .filt.active::after{ width:100%; }
+
+  /* ============ GRID ============ */
+  .grid{
+    display:grid; gap:46px 38px; padding:52px 0 96px;
+    grid-template-columns:repeat(3,1fr);
+  }
+  .card{ display:block; cursor:pointer; }
+  .card .frame{
+    position:relative; overflow:hidden; border-radius:3px;
+    box-shadow:inset 0 0 0 1px rgba(40,34,24,.05), var(--glass-inset), var(--shadow-card);
+    transition:transform .6s var(--ease), box-shadow .6s var(--ease);
+    will-change:transform;
+  }
+  .card .frame::after{ /* glass glare tracking the cursor */
+    content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+    border-radius:inherit; mix-blend-mode:screen; opacity:0;
+    background:
+      radial-gradient(220px circle at var(--mx,50%) var(--my,16%), rgba(255,255,255,.24), transparent 62%),
+      linear-gradient(125deg, rgba(255,255,255,.15) 0%, transparent 30%, transparent 72%, rgba(255,255,255,.06) 100%);
+    transition:opacity .45s var(--ease);
+  }
+  .card:hover .frame::after{ opacity:1; }
+  .card .canvas{
+    aspect-ratio:4/5; width:100%;
+    transition:transform 1.1s var(--ease), filter .6s var(--ease);
+  }
+  .card .canvas::after{ /* vignette + grain over art */
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(120% 120% at 50% 30%, transparent 55%, rgba(20,14,8,.16));
+    mix-blend-mode:multiply;
+  }
+  .card:hover .frame{ transform:translateY(-7px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.5), var(--glass-inset), var(--shadow-lift); }
+  .card:hover .canvas{ transform:scale(1.035); }
+
+  .card-flag{
+    position:absolute; top:12px; left:12px; z-index:3;
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:9.5px; letter-spacing:.15em; text-transform:uppercase; font-weight:600; color:var(--ink);
+    background:rgba(255,253,249,.72); border:1px solid var(--glass-edge); border-radius:99px; padding:6px 11px;
+    backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
+    box-shadow:var(--glass-inset);
+  }
+  .card-flag .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); }
+  .card-flag.live .dot{ box-shadow:0 0 0 0 rgba(161,75,53,.5); animation:pulse 2.4s var(--ease) infinite; }
+  .card-flag.buy .dot{ background:transparent; border:1px solid var(--muted); }
+  .card-flag.ended{ color:var(--ink-2); }
+  .card-flag.ended .dot{ background:var(--muted); }
+
+  .card-meta{ padding:16px 2px 0; }
+  .badge{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    font-weight:600; color:var(--ink-2);
+  }
+  .badge.live{ color:var(--accent-ink); }
+  .badge .dot{
+    width:6px; height:6px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 0 0 rgba(161,75,53,.5); animation:pulse 2.4s var(--ease) infinite;
+  }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(161,75,53,.45)} 70%{box-shadow:0 0 0 7px rgba(161,75,53,0)} 100%{box-shadow:0 0 0 0 rgba(161,75,53,0)} }
+  .badge.buy .dot{ background:transparent; border:1px solid var(--muted); animation:none; box-shadow:none; }
+  .badge.ended{ color:var(--muted); }
+  .badge.ended .dot{ background:var(--muted); animation:none; box-shadow:none; }
+
+  .card h3{
+    font-family:var(--serif); font-weight:400; font-size:21px;
+    line-height:1.2; margin:0; letter-spacing:-.005em;
+  }
+  .card h3 em{ font-style:italic; }
+  .card .sub{ font-size:12.5px; color:var(--muted); margin-top:4px; }
+  .card-line{
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:14px; margin-top:14px; padding-top:13px;
+    border-top:1px solid var(--line);
+  }
+  .card-line .cl{ display:flex; flex-direction:column; gap:6px; }
+  .card-line .cl.r{ align-items:flex-end; text-align:right; }
+  .card-line .k{ font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .card-line .v{ font-family:var(--serif); font-size:20px; line-height:1; font-weight:400; font-variant-numeric:tabular-nums; }
+  .card-line .cd{ font-size:13px; color:var(--ink-2); font-variant-numeric:tabular-nums; letter-spacing:.03em; line-height:1; }
+  .card-line .cd.done{ color:var(--muted); }
+
+  /* ============ DETAIL ============ */
+  .detail{ padding-top:30px; padding-bottom:120px; }
+  .crumb{
+    display:inline-flex; align-items:center; gap:9px; margin:8px 0 34px;
+    font-size:13px; color:var(--ink-2); letter-spacing:.02em;
+    transition:gap .3s var(--ease), color .3s var(--ease);
+  }
+  .crumb:hover{ gap:13px; color:var(--ink); }
+  .crumb svg{ width:15px; height:15px; }
+
+  .detail-grid{
+    display:grid; grid-template-columns:1.45fr 1fr; gap:64px;
+    align-items:start;
+  }
+  /* artwork hung on wall */
+  .stage{
+    background:
+      linear-gradient(180deg, var(--wall), color-mix(in srgb,var(--wall) 88%, #000 4%));
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:clamp(24px,4vw,52px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hang{
+    position:relative; max-width:min(100%,520px); width:100%;
+    animation:rise .8s .05s var(--ease) both;
+  }
+  .hang::after{ /* museum glass over the framed piece */
+    content:""; position:absolute; inset:0; border-radius:2px; pointer-events:none;
+    z-index:3; mix-blend-mode:screen;
+    background:linear-gradient(125deg, rgba(255,255,255,.18) 0%, transparent 26%, transparent 68%, rgba(255,255,255,.07) 100%);
+  }
+  .hang .canvas{
+    width:100%; aspect-ratio:4/5; border-radius:2px;
+    box-shadow:var(--shadow-hang);
+  }
+  .hang .canvas::after{
+    content:""; position:absolute; inset:0; border-radius:2px;
+    background:radial-gradient(120% 120% at 50% 25%, transparent 55%, rgba(20,14,8,.18));
+    mix-blend-mode:multiply;
+  }
+  .hang .mat{
+    position:absolute; inset:-14px; border:1px solid rgba(255,255,255,.5);
+    border-radius:3px; pointer-events:none;
+  }
+  .plate{
+    margin-top:30px; text-align:center; animation:rise .8s .14s var(--ease) both;
+  }
+  .plate .pt{ font-family:var(--serif); font-style:italic; font-size:15px; color:var(--ink-2); }
+  .plate .pm{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-top:5px; }
+
+  /* sticky panel */
+  .panel-col{ position:sticky; top:110px; }
+  .panel{
+    position:relative; animation:rise .8s .12s var(--ease) both;
+    background:rgba(252,250,245,.96);
+    backdrop-filter:blur(8px) saturate(115%); -webkit-backdrop-filter:blur(8px) saturate(115%);
+    border:1px solid var(--glass-edge); border-radius:16px;
+    padding:32px 32px 34px; overflow:hidden;
+    box-shadow:var(--glass-shadow), var(--glass-inset);
+  }
+  .panel::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+  }
+  .panel .status{ margin-bottom:18px; }
+  .panel h2{
+    font-family:var(--serif); font-weight:300;
+    font-size:clamp(28px,3.4vw,40px); line-height:1.08;
+    letter-spacing:-.015em; margin:0;
+  }
+  .panel h2 em{ font-style:italic; }
+  .panel .facts{
+    display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:14px;
+    font-size:13.5px; color:var(--ink-2);
+  }
+  .panel .facts span{ position:relative; padding-right:14px; }
+  .panel .facts span:not(:last-child)::after{
+    content:""; position:absolute; right:0; top:51%; width:3px; height:3px;
+    border-radius:50%; background:var(--line-2); transform:translateY(-50%);
+  }
+  .panel .desc{
+    margin:22px 0 0; font-size:14.5px; color:var(--ink-2);
+    line-height:1.7; max-width:42ch;
+  }
+  .rule{ height:1px; background:var(--line); margin:30px 0; }
+
+  /* bid block */
+  .bidhead{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; }
+  .bid-amt .k{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  .bid-amt .v{
+    font-family:var(--serif); font-weight:400; font-size:clamp(34px,4.6vw,48px);
+    line-height:1; letter-spacing:-.02em; margin-top:7px; color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .bid-amt .v.flash{ animation:flash .9s var(--ease); }
+  @keyframes flash{ 0%{color:var(--accent)} 100%{color:var(--ink)} }
+  .bids-count{ font-size:12.5px; color:var(--muted); text-align:right; }
+
+  .timer{
+    display:flex; gap:7px; margin-top:20px;
+  }
+  .timer .unit{
+    flex:1; text-align:center; border-radius:6px; padding:11px 4px 9px;
+    background:var(--paper-2); border:1px solid var(--line);
+    box-shadow:var(--glass-inset);
+  }
+  .timer .unit b{
+    display:block; font-family:var(--serif); font-size:24px; font-weight:400;
+    line-height:1; font-variant-numeric:tabular-nums; color:var(--ink);
+  }
+  .timer .unit span{ font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-top:6px; display:block; }
+  .timer-label{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin:0 0 9px; }
+
+  .bidform{ margin-top:24px; }
+  .field-row{ display:flex; gap:10px; }
+  .moneyfield{
+    flex:1; position:relative; display:flex; align-items:center;
+    background:var(--paper); border:1px solid var(--line-2);
+    border-radius:6px; box-shadow:var(--glass-inset);
+    transition:border-color .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .moneyfield:focus-within{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(33,31,27,.06); }
+  .moneyfield .cur{ padding:0 0 0 15px; color:var(--muted); font-size:15px; }
+  .moneyfield input{
+    flex:1; border:0; background:none; outline:none;
+    font-family:var(--sans); font-size:16px; color:var(--ink);
+    padding:13px 14px 13px 6px; font-variant-numeric:tabular-nums; width:100%;
+  }
+  .btn{
+    position:relative; overflow:hidden;
+    border:1px solid var(--ink);
+    background:linear-gradient(180deg, #2c2924, var(--ink));
+    color:var(--paper);
+    font-size:14px; letter-spacing:.02em; font-weight:500;
+    padding:0 22px; border-radius:6px; white-space:nowrap;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.1), 0 10px 24px -16px rgba(0,0,0,.6);
+    transition:transform .25s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease), opacity .3s var(--ease);
+  }
+  .btn::after{ /* specular shine sweep */
+    content:""; position:absolute; top:0; left:-140%; width:55%; height:100%;
+    background:linear-gradient(105deg, transparent, rgba(255,255,255,.30), transparent);
+    transform:skewX(-18deg); transition:left .6s var(--ease); pointer-events:none;
+  }
+  .btn:hover{ background:linear-gradient(180deg, var(--accent), var(--accent-ink)); border-color:var(--accent-ink); }
+  .btn:hover::after{ left:150%; }
+  .btn:active{ transform:translateY(1px); }
+  .btn.block{ width:100%; padding:15px 22px; }
+  .btn.ghost{ background:none; color:var(--ink); box-shadow:none; }
+  .btn.ghost:hover{ background:var(--ink); color:var(--paper); }
+  /* auction buy-now alternative */
+  .buynow-alt{ margin-top:24px; }
+  .alt-sep{
+    display:flex; align-items:center; gap:14px; margin:0 0 18px;
+    font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted);
+  }
+  .alt-sep::before, .alt-sep::after{ content:""; height:1px; flex:1; background:var(--line); }
+  .hint{ font-size:12.5px; color:var(--muted); margin-top:11px; letter-spacing:.01em; }
+  .hint.err{ color:var(--accent-ink); }
+  .hint b{ color:var(--ink-2); font-weight:500; }
+
+  /* ended / buy-now blocks */
+  .ended-tag{
+    display:inline-flex; align-items:center; gap:8px; font-size:11px;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+    border:1px solid var(--line-2); border-radius:99px; padding:7px 14px;
+  }
+  .price-big .k{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+  .price-big .v{
+    font-family:var(--serif); font-weight:400; font-size:clamp(32px,4.4vw,46px);
+    line-height:1; letter-spacing:-.02em; margin-top:8px;
+    font-variant-numeric:tabular-nums;
+  }
+  .note{
+    margin-top:14px; font-size:13px; color:var(--ink-2); line-height:1.6;
+    display:flex; gap:9px; align-items:flex-start;
+  }
+  .note svg{ width:15px; height:15px; flex:none; margin-top:2px; color:var(--muted); }
+
+  /* more from the studio */
+  .more{ margin-top:72px; padding-top:46px; border-top:1px solid var(--line); }
+  .more-head{ display:flex; align-items:baseline; justify-content:space-between; gap:20px; margin-bottom:32px; }
+  .more-head h2{ font-family:var(--serif); font-weight:300; font-size:clamp(22px,2.6vw,30px); letter-spacing:-.01em; margin:0; }
+  .more-all{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--ink-2); white-space:nowrap; transition:color .3s var(--ease); }
+  .more-all:hover{ color:var(--ink); }
+  .more-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:40px 38px; }
+
+  /* full-width bid history */
+  .bidlog{ margin-top:64px; padding-top:46px; border-top:1px solid var(--line); }
+  .bidlog-head{ display:flex; align-items:baseline; justify-content:space-between; gap:20px; margin-bottom:16px; }
+  .bidlog-head h2{ font-family:var(--serif); font-weight:300; font-size:clamp(22px,2.6vw,30px); letter-spacing:-.01em; margin:0; }
+  .bidlog-head .cnt{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .bidlog-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; column-gap:64px; }
+  .bidlog-list li{
+    display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:20px;
+    padding:16px 2px; border-top:1px solid var(--line); font-size:15px;
+  }
+  .bidlog-list .who{ display:flex; align-items:center; gap:13px; color:var(--ink-2); min-width:0; }
+  .bidlog-list .who .av{ width:30px; height:30px; border-radius:50%; flex:none; background:linear-gradient(135deg,var(--line-2),var(--paper-2)); border:1px solid var(--line); }
+  .bidlog-list .amt{ font-family:var(--serif); font-size:19px; font-variant-numeric:tabular-nums; text-align:right; min-width:84px; }
+  .bidlog-list .t{ font-size:12.5px; color:var(--muted); text-align:right; letter-spacing:.03em; min-width:72px; }
+  .bidlog-list li.you .who{ color:var(--ink); font-weight:500; }
+  .bidlog-list li.you .who .av{ background:var(--accent-tint); border-color:var(--accent); }
+
+  /* ============ FOOTER ============ */
+  footer{ border-top:1px solid var(--line); padding:64px 0 66px; margin-top:10px; }
+  .foot-tag{
+    font-family:var(--serif); font-weight:300; font-size:clamp(23px,3.2vw,36px);
+    line-height:1.16; letter-spacing:-.01em; max-width:17ch; margin:0 0 46px; color:var(--ink);
+  }
+  .foot-tag em{ font-style:italic; color:var(--ink-2); }
+  .foot-inner{
+    display:flex; align-items:baseline; justify-content:space-between; gap:22px 40px;
+    flex-wrap:wrap; padding-bottom:26px; border-bottom:1px solid var(--line);
+  }
+  .foot-inner .fl{ font-family:var(--serif); font-size:25px; }
+  .foot-links{ display:flex; gap:14px 28px; flex-wrap:wrap; }
+  .foot-links a{ font-size:13px; color:var(--ink-2); letter-spacing:.01em; transition:color .3s var(--ease); }
+  .foot-links a:hover{ color:var(--ink); }
+  .foot-base{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-top:22px; }
+  .foot-base .fm{ font-size:12px; color:var(--muted); letter-spacing:.03em; }
+
+  /* mobile sticky action bar (detail page) */
+  .action-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:300; display:none;
+    flex-direction:column; gap:10px;
+    padding:12px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+    background:linear-gradient(180deg, rgba(255,253,249,.92), rgba(255,253,249,.84));
+    backdrop-filter:blur(16px) saturate(140%); -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-top:1px solid var(--glass-edge);
+    box-shadow:0 -12px 34px -22px rgba(40,30,18,.5);
+  }
+  .action-bar .ab-info{ display:flex; align-items:baseline; gap:9px; }
+  .action-bar .ab-info .k{ font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .action-bar .ab-info .v{ font-family:var(--serif); font-size:18px; line-height:1; font-variant-numeric:tabular-nums; }
+  .action-bar .ab-info .t{ margin-left:auto; font-size:13px; color:var(--accent-ink); font-variant-numeric:tabular-nums; letter-spacing:.03em; font-weight:600; }
+  .action-bar .ab-row{ display:flex; gap:10px; }
+  .action-bar .ab-row .btn{ flex:1; padding:14px 12px; border-radius:8px; }
+
+  /* ============ MODAL ============ */
+  .overlay{
+    position:fixed; inset:0; z-index:400; display:none;
+    align-items:center; justify-content:center; padding:24px;
+    background:rgba(35,30,22,.30);
+    backdrop-filter:blur(12px) saturate(120%); -webkit-backdrop-filter:blur(12px) saturate(120%);
+  }
+  .overlay.open{ display:flex; animation:fadeIn .3s var(--ease); }
+  .modal{
+    width:100%; max-width:412px; position:relative;
+    background:linear-gradient(180deg, rgba(255,253,249,.82), rgba(255,253,249,.66));
+    backdrop-filter:blur(28px) saturate(150%); -webkit-backdrop-filter:blur(28px) saturate(150%);
+    border:1px solid var(--glass-edge); border-radius:16px; overflow:hidden;
+    padding:40px 38px 34px;
+    box-shadow:0 50px 90px -40px rgba(30,22,12,.6), var(--glass-inset);
+    animation:pop .45s var(--ease) both;
+  }
+  .modal::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+  }
+  @keyframes pop{ from{opacity:0; transform:translateY(14px) scale(.985)} to{opacity:1; transform:none} }
+  .modal .x{
+    position:absolute; top:16px; right:16px; width:32px; height:32px;
+    border:0; background:none; color:var(--muted); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .3s var(--ease), color .3s var(--ease);
+  }
+  .modal .x:hover{ background:var(--paper-2); color:var(--ink); }
+  .modal .eyebrow{ display:block; }
+  .modal h3{
+    font-family:var(--serif); font-weight:300; font-size:30px;
+    margin:12px 0 0; letter-spacing:-.01em;
+  }
+  .modal p{ font-size:13.5px; color:var(--ink-2); margin:10px 0 26px; line-height:1.6; }
+  .modal label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:9px; }
+  .modal input[type=email]{
+    width:100%; border:1px solid var(--line-2); background:var(--paper);
+    border-radius:6px; padding:14px 15px; font-family:var(--sans);
+    font-size:16px; color:var(--ink); outline:none;
+    transition:border-color .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .modal input[type=email]:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(33,31,27,.06); }
+  .modal .btn{ margin-top:16px; }
+  .modal .nopass{
+    margin-top:18px; font-size:12px; color:var(--muted); text-align:center;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .modal .nopass svg{ width:14px; height:14px; }
+  .modal .sent{
+    text-align:center; padding:14px 0 4px;
+  }
+  .modal .sent .ico{
+    width:52px; height:52px; border-radius:50%; margin:0 auto 18px;
+    border:1px solid var(--accent); color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center;
+    animation:pop .5s var(--ease) both;
+  }
+  .modal .sent .ico svg{ width:24px; height:24px; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:980px){
+    .detail-grid{ grid-template-columns:1fr; gap:34px; }
+    .panel-col{ position:static; }
+    .stage{ min-height:auto; }
+    .grid{ grid-template-columns:repeat(2,1fr); gap:38px 28px; }
+    .more-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:820px){
+    nav.main, .head-right{ display:none; }
+    .menu-btn{ display:inline-flex; grid-column:2; justify-self:end; }
+    .head-inner{ grid-template-columns:1fr auto; height:62px; }
+    header.scrolled .head-inner{ height:58px; }
+    .logo{ grid-column:1; justify-self:start; flex-direction:row; align-items:baseline; gap:8px; text-align:left; }
+    .logo .mark{ font-size:22px; }
+    header.scrolled .logo .mark{ font-size:20px; }
+    .logo .sub{ transform:translateY(-1px); }
+    .closing-next{ display:none; }
+    .topbar-inner{ justify-content:center; }
+    .intro{ grid-template-columns:1fr; gap:40px; }
+    .feature{ justify-self:start; max-width:440px; }
+  }
+  @media (max-width:680px){
+    .wrap{ padding:0 20px; }
+    .intro{ padding:50px 0 18px; }
+    .grid{ grid-template-columns:repeat(2,1fr); gap:32px 16px; padding:34px 0 64px; }
+    .grid .card .canvas{ aspect-ratio:4/5; }
+    .grid .card h3{ font-size:16.5px; line-height:1.18; }
+    .grid .card .sub{ font-size:11px; margin-top:3px; }
+    .grid .card-line{ flex-direction:column; align-items:stretch; gap:9px; margin-top:11px; padding-top:11px; }
+    .grid .card-line .cl.r{ align-items:flex-start; text-align:left; }
+    .grid .card-line .v{ font-size:17px; }
+    .grid .card-flag{ font-size:8.5px; letter-spacing:.12em; padding:5px 9px; top:9px; left:9px; }
+    .more-grid{ grid-template-columns:1fr; }
+    .more-grid .card .canvas{ aspect-ratio:5/6; }
+    .filterbar{ gap:18px; flex-wrap:wrap; margin-top:34px; }
+    .filterbar .count{ width:100%; margin-left:0; order:3; }
+    .stage{ padding:26px; }
+    .timer .unit b{ font-size:21px; }
+    .timer .unit{ padding:12px 4px 10px; }
+    .bidlog{ margin-top:48px; padding-top:36px; }
+    .bidlog-list{ grid-template-columns:1fr; column-gap:0; }
+    .bidlog-list li{ gap:12px; padding:14px 2px; }
+    .bidlog-list .who .av{ display:none; }
+    .bidlog-list .amt{ min-width:auto; }
+    .bidlog-list .t{ min-width:auto; }
+    .modal{ padding:34px 24px 28px; }
+    .action-bar.show{ display:flex; }
+    body.has-action-bar{ padding-bottom:118px; }
+  }
+
+  /* respect reduced-motion preferences */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important; animation-iteration-count:1 !important;
+      transition-duration:.001ms !important; scroll-behavior:auto !important;
+    }
+    .card:hover .frame{ transform:none; }
+    .btn::after, .card .frame::after{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header id="hdr">
+  <!-- tier 1: live status strip -->
+  <div class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="live-stat" id="liveStat" href="#/"></a>
+      <div class="closing-next" id="closingNext"></div>
+    </div>
+  </div>
+  <!-- tier 2: main bar -->
+  <div class="wrap head-inner">
+    <nav class="main" aria-label="Primary">
+      <a href="#/" data-nav="works" class="active">Works</a>
+      <a href="#/" data-nav="auction" data-filter="auction">Auctions</a>
+      <a href="#about" data-nav="about">About</a>
+    </nav>
+    <a class="logo" href="#/" aria-label="Art with Nia — home">
+      <span class="mark serif">Art with Nia</span>
+      <span class="sub">New York</span>
+    </a>
+    <div class="head-right">
+      <a class="signin-btn" href="#" id="openSignin"><span class="sdot"></span>Sign in</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <span class="bars"><i></i><i></i></span>Menu
+    </button>
+  </div>
+</header>
+
+<!-- ===================== MOBILE MENU ===================== -->
+<div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="wrap">
+    <div class="menu-top">
+      <span class="serif" style="font-size:22px">Art with Nia</span>
+      <button class="menu-x" id="menuClose" aria-label="Close menu">Close
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <nav class="menu-nav" aria-label="Mobile">
+      <a href="#/" data-menu-link="works"><span class="idx">01</span>Works</a>
+      <a href="#/" data-menu-link="auction"><span class="idx">02</span>Auctions</a>
+      <a href="#about" data-menu-link="about"><span class="idx">03</span>About</a>
+    </nav>
+    <div class="menu-foot">
+      <a class="signin-btn block" href="#" id="menuSignin"><span class="sdot"></span>Sign in</a>
+      <div class="menu-contact">
+        <a href="mailto:nia@artwithnia.com">nia@artwithnia.com</a>
+        <a href="https://instagram.com/insom___nia" target="_blank" rel="noopener">@insom___nia</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- ===================== GALLERY ===================== -->
+  <section class="view active" id="view-gallery">
+    <div class="wrap">
+      <div class="intro">
+        <div class="intro-copy">
+          <span class="eyebrow">Nia — Muralist &amp; Visual Artist · New York</span>
+          <h1 class="serif">Bold, intentional, <em>emotionally driven.</em></h1>
+          <p>Nia is a New York–based muralist and visual artist whose work blends abstract elements with recognizable forms — expressive, yet made to be lived with. These are her available studio paintings, released individually by auction or direct acquisition.</p>
+        </div>
+        <div class="feature" id="featuredWork"></div>
+      </div>
+
+      <div class="filterbar">
+        <button class="filt active" data-filter="all">All works</button>
+        <button class="filt" data-filter="auction">Live auctions</button>
+        <button class="filt" data-filter="buynow">Available</button>
+        <span class="count" id="gridCount"></span>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== DETAIL ===================== -->
+  <section class="view" id="view-detail">
+    <div class="wrap detail">
+      <a class="crumb" href="#/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        All works
+      </a>
+      <div class="detail-grid" id="detailGrid"><!-- injected --></div>
+      <section class="bidlog" id="bidHistory"></section>
+      <section class="more" id="moreWorks"></section>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== MOBILE STICKY ACTION BAR ===================== -->
+<div class="action-bar" id="actionBar" aria-label="Quick actions"></div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="about">
+  <div class="wrap">
+    <p class="foot-tag">Every vision deserves to be seen — <em>let’s bring yours to life.</em></p>
+    <div class="foot-inner">
+      <span class="fl">Art with Nia</span>
+      <nav class="foot-links" aria-label="Contact">
+        <a href="mailto:nia@artwithnia.com">nia@artwithnia.com</a>
+        <a href="https://instagram.com/insom___nia" target="_blank" rel="noopener">@insom___nia</a>
+        <a href="#" id="openSignin2">Sign in</a>
+      </nav>
+    </div>
+    <div class="foot-base">
+      <span class="fm">New York City · Murals, commissions &amp; original works</span>
+      <span class="fm">© 2026 Art with Nia</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== SIGN-IN MODAL ===================== -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="signinTitle">
+  <div class="modal" id="modal">
+    <button class="x" id="closeModal" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+    </button>
+    <div id="modalBody">
+      <span class="eyebrow">Collector access</span>
+      <h3 class="serif" id="signinTitle">Sign in</h3>
+      <p>Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.</p>
+      <form id="signinForm">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+        <button class="btn block" type="submit">Send me a sign-in link</button>
+      </form>
+      <div class="nopass">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>
+        No password needed — ever.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase client (UMD build — exposes window.supabase) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const MIN = 60*1000, HOUR = 60*MIN, DAY = 24*HOUR;
+const future = ms => Date.now() + ms;
+const past   = ms => Date.now() - ms;
+
+const ARTWORKS = [
+  {
+    id:"tidewall",
+    title:"Tidewall, No. 4", year:2024,
+    medium:"Oil and marble dust on linen", size:"120 × 95 cm",
+    desc:"Built up over four months in thin tidal layers, the surface holds the memory of every wash that came before it. Best viewed in raking afternoon light.",
+    palette:["#1f3a3d","#3f6b63","#cdbfa3"], variant:"strata",
+    type:"auction", increment:100,
+    currentBid:4600, bids:14, closesAt:future(30*HOUR + 12*MIN), buyNow:8500,
+    history:[
+      {name:"Collector 4•••9", amount:4600, at:past(8*MIN)},
+      {name:"Collector 1•••2", amount:4400, at:past(52*MIN)},
+      {name:"Collector 7•••0", amount:4100, at:past(3*HOUR)},
+      {name:"Collector 4•••9", amount:3800, at:past(6*HOUR)},
+      {name:"Collector 2•••5", amount:3500, at:past(11*HOUR)},
+      {name:"Collector 9•••1", amount:3200, at:past(20*HOUR)},
+    ],
+  },
+  {
+    id:"ochre-field",
+    title:"Ochre Field", year:2023,
+    medium:"Oil on cotton canvas", size:"90 × 90 cm",
+    desc:"A single field of ground ochre, scraped back and reapplied until the colour seems to emit its own warmth. Part of the Dry Season series.",
+    palette:["#caa05a","#e7d3a7","#9c6b32"], variant:"field",
+    type:"buynow", price:3200,
+  },
+  {
+    id:"salt-ember",
+    title:"Salt & Ember", year:2024,
+    medium:"Pigment and ash on panel", size:"70 × 56 cm",
+    desc:"Wood ash from the studio stove bound into a low, smouldering horizon. A small, intense piece meant to be lived with closely.",
+    palette:["#221f1d","#3a322c","#c8603a"], variant:"orb",
+    type:"auction", increment:100,
+    currentBid:7800, bids:23, closesAt:future(2*HOUR + 47*MIN), buyNow:12000,
+    history:[
+      {name:"Collector 3•••8", amount:7800, at:past(2*MIN)},
+      {name:"Collector 6•••4", amount:7600, at:past(14*MIN)},
+      {name:"Collector 3•••8", amount:7300, at:past(40*MIN)},
+      {name:"Collector 0•••7", amount:7000, at:past(1*HOUR+20*MIN)},
+      {name:"Collector 8•••2", amount:6600, at:past(2*HOUR+30*MIN)},
+    ],
+  },
+  {
+    id:"quiet-meridian",
+    title:"Quiet Meridian", year:2022,
+    medium:"Acrylic and graphite on board", size:"60 × 80 cm",
+    desc:"A horizon line drawn and erased a hundred times, leaving only a soft graphite ghost across a wash of sage. Quiet and exacting.",
+    palette:["#8a988b","#c2c6bd","#5f6d63"], variant:"veil",
+    type:"buynow", price:5400,
+  },
+  {
+    id:"vesper",
+    title:"Vesper", year:2023,
+    medium:"Oil on linen", size:"100 × 100 cm",
+    desc:"The last of the Dusk paintings — a plum field swallowing a pale, sinking disc. Exhibited at Galeria Foz, 2024.",
+    palette:["#2a2336","#4a3b57","#b98aa0"], variant:"orb",
+    type:"auction", increment:200,
+    currentBid:9200, bids:31, closesAt:past(3*DAY), ended:true, finalPrice:9200,
+    history:[
+      {name:"Collector 5•••3", amount:9200, at:past(3*DAY+2*MIN)},
+      {name:"Collector 2•••8", amount:9000, at:past(3*DAY+25*MIN)},
+      {name:"Collector 5•••3", amount:8600, at:past(3*DAY+1*HOUR)},
+      {name:"Collector 7•••1", amount:8200, at:past(3*DAY+3*HOUR)},
+    ],
+  },
+  {
+    id:"low-country",
+    title:"Low Country", year:2024,
+    medium:"Mixed media on board", size:"110 × 80 cm",
+    desc:"Layered greens and silt, dragged horizontally to suggest flooded fields seen from a slow train. Unframed; ready to hang.",
+    palette:["#3b4a2f","#6f7d4e","#b7a378"], variant:"strata",
+    type:"buynow", price:2800,
+  },
+  {
+    id:"argent",
+    title:"Argent", year:2024,
+    medium:"Silverpoint and wash on prepared paper", size:"50 × 65 cm",
+    desc:"Drawn in pure silverpoint, the metal will warm and deepen with the years. A study in restraint and patience.",
+    palette:["#b9bcc0","#e9e9ec","#8d9197"], variant:"veil",
+    type:"auction", increment:50,
+    currentBid:3100, bids:9, closesAt:future(21*HOUR + 35*MIN), buyNow:5200,
+    history:[
+      {name:"Collector 1•••6", amount:3100, at:past(22*MIN)},
+      {name:"Collector 4•••0", amount:2950, at:past(1*HOUR+40*MIN)},
+      {name:"Collector 1•••6", amount:2800, at:past(5*HOUR)},
+      {name:"Collector 9•••3", amount:2600, at:past(14*HOUR)},
+    ],
+  },
+  {
+    id:"bloom-reserve",
+    title:"Bloom in Reserve", year:2023,
+    medium:"Oil on canvas", size:"95 × 75 cm",
+    desc:"A rose-clay swell held just before opening — the most colour Nia allows into a single canvas. Studio favourite, rarely shown.",
+    palette:["#b06a5c","#e8c4b8","#7d4034"], variant:"field",
+    type:"buynow", price:6750,
+  },
+];
+
+const byId = id => ARTWORKS.find(a => a.id === id);
+
+/* ============================================================
+   SUPABASE — works catalog (managed in the Supabase dashboard)
+   Paste your project credentials below. The anon key is safe to
+   expose client-side; the `works` table is read-only to the public
+   via Row Level Security. Until filled, the site uses the built-in
+   sample works above so it always renders.
+   ============================================================ */
+const SUPABASE_URL      = "https://wtngjmtrxgdgoyjbqily.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0bmdqbXRyeGdkZ295amJxaWx5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NDU2MDUsImV4cCI6MjA5NzMyMTYwNX0.hPgBkqA2ke1bKpVrCE9vwJyxxAsngIxuxRd-7AQ4AOk";
+
+const sb = (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+// map a Supabase row → the shape the render code expects
+function mapRow(r){
+  const closesAt = r.closes_at ? Date.parse(r.closes_at) : undefined;
+  return {
+    id: r.id,
+    title: r.title,
+    year: r.year,
+    medium: r.medium,
+    size: r.size,
+    desc: r.description,
+    type: r.type,
+    image_url: r.image_url || null,
+    palette: Array.isArray(r.palette) ? r.palette : ["#3a322c","#6f7d4e","#b7a378"],
+    variant: r.variant || "field",
+    price: r.price != null ? Number(r.price) : undefined,
+    currentBid: r.current_bid != null ? Number(r.current_bid) : undefined,
+    bids: r.bids != null ? Number(r.bids) : 0,
+    closesAt,
+    increment: r.min_increment != null ? Number(r.min_increment) : 100,
+    buyNow: r.buy_now != null ? Number(r.buy_now) : undefined,
+    ended: !!r.ended || (r.type === "auction" && closesAt != null && closesAt < Date.now()),
+    finalPrice: r.final_price != null ? Number(r.final_price)
+              : (r.current_bid != null ? Number(r.current_bid) : undefined),
+    history: Array.isArray(r.history)
+      ? r.history.map(h => ({ name:h.name, amount:Number(h.amount), at: typeof h.at === "number" ? h.at : Date.parse(h.at) }))
+      : []
+  };
+}
+
+// fetch works from Supabase; on success, replace the sample data and re-render
+async function initData(){
+  if (!sb) return;
+  try{
+    const { data, error } = await sb.from("works").select("*").order("sort", { ascending:true });
+    if (error){ console.warn("[works] load failed:", error.message); return; }
+    if (data && data.length){
+      ARTWORKS.length = 0;
+      data.forEach(r => ARTWORKS.push(mapRow(r)));
+      renderGrid();
+      renderTopbar();
+      renderFeatured();
+      route();
+    }
+  } catch(e){ console.warn("[works] load error:", e); }
+}
+
+/* ============================================================
+   PAINTERLY CANVAS GENERATOR
+   ============================================================ */
+function canvasStyle(a){
+  // real photo (Supabase Storage) takes precedence over generated art
+  if (a.image_url){
+    return `position:relative; background-image:url('${String(a.image_url).replace(/'/g,"%27")}'); background-size:cover; background-position:center; background-repeat:no-repeat;`;
+  }
+  const [c1,c2,c3] = a.palette;
+  let bg;
+  switch(a.variant){
+    case "field":
+      bg = `radial-gradient(130% 95% at 32% 24%, ${c2} 0%, transparent 58%),
+            radial-gradient(120% 120% at 80% 95%, ${c3} 0%, transparent 60%),
+            linear-gradient(158deg, ${c1}, ${c3})`;
+      break;
+    case "orb":
+      bg = `radial-gradient(closest-side at 60% 40%, ${c3} 0%, ${c3} 8%, transparent 64%),
+            radial-gradient(150% 120% at 50% 120%, ${c2} 0%, transparent 60%),
+            linear-gradient(180deg, ${c1} 0%, ${c2} 100%)`;
+      break;
+    case "strata":
+      bg = `linear-gradient(180deg,
+              ${c1} 0%, ${c1} 30%,
+              ${c2} 46%, ${c2} 60%,
+              ${c3} 78%, ${c3} 100%)`;
+      break;
+    case "veil":
+    default:
+      bg = `linear-gradient(118deg, ${c1} 0%, ${c2} 48%, ${c3} 100%),
+            radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.18), transparent 50%)`;
+  }
+  return `position:relative; background:${bg}; background-blend-mode:normal;`;
+}
+
+/* ============================================================
+   FORMATTERS
+   ============================================================ */
+const money = n => "$" + n.toLocaleString("en-US");
+
+function remaining(ts){
+  const d = ts - Date.now();
+  if (d <= 0) return null;
+  return {
+    d: Math.floor(d/DAY),
+    h: Math.floor((d%DAY)/HOUR),
+    m: Math.floor((d%HOUR)/MIN),
+    s: Math.floor((d%MIN)/1000),
+  };
+}
+function shortCountdown(ts){
+  const r = remaining(ts);
+  if (!r) return "Closed";
+  const p = n => String(n).padStart(2,"0");
+  if (r.d > 0) return `${r.d}d ${p(r.h)}h ${p(r.m)}m`;
+  return `${p(r.h)}:${p(r.m)}:${p(r.s)}`;
+}
+function ago(at){
+  const d = Date.now() - at;
+  if (d < HOUR) return Math.max(1,Math.floor(d/MIN)) + "m ago";
+  if (d < DAY)  return Math.floor(d/HOUR) + "h ago";
+  return Math.floor(d/DAY) + "d ago";
+}
+
+/* ============================================================
+   GALLERY RENDER
+   ============================================================ */
+const grid = document.getElementById("grid");
+const gridCount = document.getElementById("gridCount");
+let activeFilter = "all";
+
+function statusOf(a){
+  if (a.type === "buynow") return {cls:"buy", label:"Buy now"};
+  if (a.ended) return {cls:"ended", label:"Auction ended"};
+  return {cls:"live", label:"Live auction"};
+}
+
+function statusLine(a){
+  if (a.type === "buynow")
+    return `<div class="card-line"><div class="cl"><span class="k">Price</span><span class="v">${money(a.price)}</span></div><div class="cl r"><span class="k">Status</span><span class="cd">Available</span></div></div>`;
+  if (a.ended)
+    return `<div class="card-line"><div class="cl"><span class="k">Final price</span><span class="v">${money(a.finalPrice)}</span></div><div class="cl r"><span class="k">Result</span><span class="cd done">Sold</span></div></div>`;
+  return `<div class="card-line"><div class="cl"><span class="k">Current bid</span><span class="v">${money(a.currentBid)}</span></div><div class="cl r"><span class="k">Ends in</span><span class="cd" data-closes="${a.closesAt}" data-fmt="short">${shortCountdown(a.closesAt)}</span></div></div>`;
+}
+function cardHTML(a, delay){
+  const s = statusOf(a);
+  return `
+    <a class="card" href="#/work/${a.id}" style="animation:rise .6s ${delay}s var(--ease) both">
+      <div class="frame">
+        <div class="canvas" style="${canvasStyle(a)}"></div>
+        <span class="card-flag ${s.cls}"><span class="dot"></span>${s.label}</span>
+      </div>
+      <div class="card-meta">
+        <h3>${a.title}</h3>
+        <div class="sub">${a.year} · ${a.medium}</div>
+        ${statusLine(a)}
+      </div>
+    </a>`;
+}
+
+function renderGrid(){
+  const list = ARTWORKS.filter(a=>{
+    if (activeFilter === "all") return true;
+    if (activeFilter === "auction") return a.type === "auction" && !a.ended;
+    if (activeFilter === "buynow") return a.type === "buynow";
+    return true;
+  });
+  grid.innerHTML = list.map((a,i)=>cardHTML(a, 0.05*i+0.1)).join("");
+  gridCount.textContent = `${list.length} ${list.length===1?"work":"works"}`;
+}
+
+// "More from the studio" rail on the detail page
+function renderMore(currentId){
+  const el = document.getElementById("moreWorks");
+  if (!el) return;
+  const others = ARTWORKS.filter(a => a.id !== currentId).slice(0, 3);
+  el.innerHTML = `
+    <div class="more-head">
+      <h2 class="serif">More from Nia</h2>
+      <a class="more-all" href="#/">View all works →</a>
+    </div>
+    <div class="more-grid">${others.map((a,i)=>cardHTML(a, 0.05*i+0.05)).join("")}</div>`;
+}
+
+document.querySelectorAll(".filt").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll(".filt").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    activeFilter = b.dataset.filter;
+    renderGrid();
+  });
+});
+// nav "Auctions" link → filter
+document.querySelectorAll('nav.main a[data-filter]').forEach(a=>{
+  a.addEventListener("click",()=>{
+    const t = document.querySelector('.filt[data-filter="auction"]');
+    if (t) t.click();
+  });
+});
+
+/* ============================================================
+   DETAIL RENDER
+   ============================================================ */
+const detailGrid = document.getElementById("detailGrid");
+
+function bidPanel(a){
+  // BUY NOW -------------------------------------------------
+  if (a.type === "buynow"){
+    return `
+      <div class="price-big">
+        <span class="k">Price</span>
+        <div class="v">${money(a.price)}</div>
+      </div>
+      <div style="margin-top:24px">
+        <button class="btn block" id="reserveBtn">Reserve this piece</button>
+      </div>
+      <p class="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 6h16v12H4z"/><path d="M4 8l8 5 8-5" stroke-linecap="round"/></svg>
+        Reserving holds the work for you. Nia will personally follow up by email to arrange payment, framing, and delivery — nothing is charged here.
+      </p>`;
+  }
+
+  // AUCTION — ENDED ----------------------------------------
+  if (a.ended){
+    return `
+      <span class="ended-tag"><span style="width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block"></span>Auction closed</span>
+      <div class="price-big" style="margin-top:18px">
+        <span class="k">Final price · ${a.bids} bids</span>
+        <div class="v">${money(a.finalPrice)}</div>
+      </div>
+      <p class="note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        This work has been acquired and is no longer available. Browse current works or sign in to be notified of the next release.
+      </p>`;
+  }
+
+  // AUCTION — LIVE -----------------------------------------
+  const minNext = a.currentBid + a.increment;
+  const r = remaining(a.closesAt) || {d:0,h:0,m:0,s:0};
+  return `
+    <div class="bidhead">
+      <div class="bid-amt">
+        <span class="k">Current bid</span>
+        <div class="v" id="curBid">${money(a.currentBid)}</div>
+      </div>
+      <div class="bids-count" id="bidCount">${a.bids} bids</div>
+    </div>
+
+    <p class="timer-label" style="margin-top:24px">Closes in</p>
+    <div class="timer" data-closes="${a.closesAt}" data-fmt="units">
+      <div class="unit"><b data-u="d">${String(r.d).padStart(2,"0")}</b><span>Days</span></div>
+      <div class="unit"><b data-u="h">${String(r.h).padStart(2,"0")}</b><span>Hrs</span></div>
+      <div class="unit"><b data-u="m">${String(r.m).padStart(2,"0")}</b><span>Min</span></div>
+      <div class="unit"><b data-u="s">${String(r.s).padStart(2,"0")}</b><span>Sec</span></div>
+    </div>
+
+    <form class="bidform" id="bidForm">
+      <div class="field-row">
+        <div class="moneyfield">
+          <span class="cur">$</span>
+          <input type="text" inputmode="numeric" id="bidInput" placeholder="${minNext.toLocaleString("en-US")}" aria-label="Your bid amount" />
+        </div>
+        <button class="btn" type="submit">Place bid</button>
+      </div>
+      <p class="hint" id="bidHint">Minimum bid <b>${money(minNext)}</b> · enter ${money(a.increment)} or more above the current bid.</p>
+    </form>
+    ${a.buyNow ? `
+    <div class="buynow-alt">
+      <div class="alt-sep"><span>or</span></div>
+      <button class="btn ghost block" id="buyNowBtn">Buy now — ${money(a.buyNow)}</button>
+      <p class="hint">Acquire it immediately at the buy-now price and end the auction. Nia will follow up to arrange payment.</p>
+    </div>` : ""}`;
+}
+
+function renderBidHistory(a){
+  const el = document.getElementById("bidHistory");
+  if (!el) return;
+  if (a.type !== "auction" || !a.history || !a.history.length){ el.style.display = "none"; el.innerHTML = ""; return; }
+  el.style.display = "";
+  el.innerHTML = `
+    <div class="bidlog-head">
+      <h2 class="serif">Bid history</h2>
+      <span class="cnt">${a.bids} ${a.bids===1?"bid":"bids"}</span>
+    </div>
+    <ul class="bidlog-list">
+      ${a.history.map((b,i)=>`
+        <li class="${b.name==="You"?"you":""}" style="animation:rise .5s ${0.03*i}s var(--ease) both">
+          <span class="who"><span class="av"></span>${b.name}</span>
+          <span class="amt">${money(b.amount)}</span>
+          <span class="t">${ago(b.at)}</span>
+        </li>`).join("")}
+    </ul>`;
+}
+
+// mobile sticky action bar — current bid/price + primary actions
+function renderActionBar(a){
+  const bar = document.getElementById("actionBar");
+  if (!bar) return;
+  if (a.ended){
+    bar.classList.remove("show");
+    document.body.classList.remove("has-action-bar");
+    bar.innerHTML = "";
+    return;
+  }
+  if (a.type === "buynow"){
+    bar.innerHTML = `
+      <div class="ab-info"><span class="k">Price</span><span class="v">${money(a.price)}</span></div>
+      <div class="ab-row"><button class="btn block" id="abReserve">Reserve this piece</button></div>`;
+  } else {
+    bar.innerHTML = `
+      <div class="ab-info">
+        <span class="k">Current bid</span><span class="v">${money(a.currentBid)}</span>
+        <span class="t" data-closes="${a.closesAt}" data-fmt="short">${shortCountdown(a.closesAt)}</span>
+      </div>
+      <div class="ab-row">
+        <button class="btn" id="abBid">Place bid</button>
+        ${a.buyNow ? `<button class="btn ghost" id="abBuy">Buy now</button>` : ""}
+      </div>`;
+  }
+  bar.querySelector("#abReserve")?.addEventListener("click", ()=>openModal("reserve", a));
+  bar.querySelector("#abBuy")?.addEventListener("click", ()=>openModal("buynow", a));
+  bar.querySelector("#abBid")?.addEventListener("click", ()=>{
+    const form = document.querySelector(".bidform");
+    if (form){
+      form.scrollIntoView({behavior:"smooth", block:"center"});
+      setTimeout(()=>document.getElementById("bidInput")?.focus({preventScroll:true}), 450);
+    }
+  });
+  bar.classList.add("show");
+  document.body.classList.add("has-action-bar");
+}
+
+function renderDetail(a){
+  const s = statusOf(a);
+  detailGrid.innerHTML = `
+    <div class="stage">
+      <figure class="hang" style="margin:0">
+        <div class="canvas" style="${canvasStyle(a)}"></div>
+        <span class="mat"></span>
+      </figure>
+    </div>
+    <div class="panel-col">
+      <div class="panel">
+        <span class="badge ${s.cls} status"><span class="dot"></span>${s.label}</span>
+        <h2 class="serif">${a.title}</h2>
+        <div class="facts">
+          <span>${a.year}</span><span>${a.medium}</span><span>${a.size}</span>
+        </div>
+        <p class="desc">${a.desc}</p>
+        <div class="rule"></div>
+        <div id="actionArea">${bidPanel(a)}</div>
+      </div>
+    </div>`;
+  bindDetailActions(a);
+  renderBidHistory(a);
+  renderMore(a.id);
+  renderActionBar(a);
+}
+
+function bindDetailActions(a){
+  // Buy now → reserve (requires sign-in feel)
+  const reserve = document.getElementById("reserveBtn");
+  if (reserve){
+    reserve.addEventListener("click", ()=>openModal("reserve", a));
+  }
+
+  // Auction "Buy now" → immediate acquire flow
+  const buyNow = document.getElementById("buyNowBtn");
+  if (buyNow){
+    buyNow.addEventListener("click", ()=>openModal("buynow", a));
+  }
+
+  // Place bid
+  const form = document.getElementById("bidForm");
+  if (form){
+    form.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      const input = document.getElementById("bidInput");
+      const hint  = document.getElementById("bidHint");
+      const minNext = a.currentBid + a.increment;
+      const val = parseInt((input.value||"").replace(/[^0-9]/g,""),10);
+      if (!val || val < minNext){
+        hint.classList.add("err");
+        hint.innerHTML = `Your bid must be at least <b>${money(minNext)}</b>.`;
+        input.focus();
+        return;
+      }
+      // accept
+      a.currentBid = val;
+      a.bids += 1;
+      a.history.unshift({name:"You", amount:val, at:Date.now()});
+      renderDetail(a);          // re-render panel with new state
+      const cur = document.getElementById("curBid");
+      if (cur) cur.classList.add("flash");
+      // surface "signed-in to bid" reassurance once
+      openModal("bid", a);
+    });
+  }
+}
+
+/* ============================================================
+   COUNTDOWN TICK (drives grid + detail timers)
+   ============================================================ */
+function tick(){
+  document.querySelectorAll("[data-closes]").forEach(el=>{
+    const ts = +el.dataset.closes;
+    if (el.dataset.fmt === "short"){
+      el.textContent = shortCountdown(ts);
+    } else {
+      const r = remaining(ts) || {d:0,h:0,m:0,s:0};
+      const set=(u,v)=>{ const b=el.querySelector(`[data-u="${u}"]`); if(b) b.textContent=String(v).padStart(2,"0"); };
+      set("d",r.d); set("h",r.h); set("m",r.m); set("s",r.s);
+    }
+  });
+}
+setInterval(tick, 1000);
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+const viewGallery = document.getElementById("view-gallery");
+const viewDetail  = document.getElementById("view-detail");
+
+function route(){
+  const hash = location.hash || "#/";
+  const m = hash.match(/^#\/work\/(.+)$/);
+  if (m && byId(m[1])){
+    renderDetail(byId(m[1]));
+    viewGallery.classList.remove("active");
+    viewDetail.classList.add("active");
+    window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+  } else {
+    viewDetail.classList.remove("active");
+    viewGallery.classList.add("active");
+    renderFeatured();
+    document.getElementById("actionBar")?.classList.remove("show");
+    document.body.classList.remove("has-action-bar");
+  }
+}
+window.addEventListener("hashchange", route);
+
+/* ============================================================
+   SIGN-IN MODAL
+   ============================================================ */
+const overlay = document.getElementById("overlay");
+const modalBody = document.getElementById("modalBody");
+let lastFocus = null;
+
+const DEFAULT_MODAL = modalBody.innerHTML;
+
+function openModal(context, a){
+  lastFocus = document.activeElement;
+  // contextual heading copy
+  let intro = DEFAULT_MODAL;
+  if (context === "reserve"){
+    intro = DEFAULT_MODAL
+      .replace("Collector access","Reserve a work")
+      .replace("Sign in","Reserve this piece")
+      .replace("Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.",
+               `Enter your email to reserve <em>${a.title}</em>. Nia will follow up personally — nothing is charged here.`)
+      .replace("Send me a sign-in link","Send me a sign-in link");
+  } else if (context === "bid"){
+    intro = DEFAULT_MODAL
+      .replace("Collector access","Confirm your bid")
+      .replace("Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.",
+               "Sign in to confirm and track your bid. We’ll send a secure link to your inbox.");
+  } else if (context === "buynow"){
+    intro = DEFAULT_MODAL
+      .replace("Collector access","Acquire now")
+      .replace("Sign in","Buy it now")
+      .replace("Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.",
+               `Enter your email to acquire <em>${a.title}</em>${a.buyNow?` at the buy-now price of ${money(a.buyNow)}`:""}. Nia will follow up to arrange payment — nothing is charged here.`);
+  }
+  modalBody.innerHTML = intro;
+  bindForm();
+  overlay.classList.add("open");
+  document.body.style.overflow = "hidden";
+  setTimeout(()=>{ const i=document.getElementById("email"); if(i) i.focus(); },60);
+}
+function closeModal(){
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+  modalBody.innerHTML = DEFAULT_MODAL;
+  bindForm();
+  if (lastFocus) lastFocus.focus();
+}
+function bindForm(){
+  const form = document.getElementById("signinForm");
+  if (!form) return;
+  form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    if (!email) return;
+    modalBody.innerHTML = `
+      <div class="sent">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3 class="serif" style="margin-top:0">Check your inbox</h3>
+        <p style="margin:10px 0 0">We’ve sent a secure sign-in link to <b style="color:var(--ink)">${email}</b>. It expires in 15 minutes.</p>
+        <button class="btn block ghost" id="doneBtn" style="margin-top:24px">Done</button>
+      </div>`;
+    const done = document.getElementById("doneBtn");
+    if (done) done.addEventListener("click", closeModal);
+  });
+}
+
+document.getElementById("openSignin").addEventListener("click",(e)=>{ e.preventDefault(); openModal("signin"); });
+document.getElementById("openSignin2").addEventListener("click",(e)=>{ e.preventDefault(); openModal("signin"); });
+document.getElementById("closeModal").addEventListener("click", closeModal);
+overlay.addEventListener("click",(e)=>{ if(e.target===overlay) closeModal(); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && overlay.classList.contains("open")) closeModal(); });
+
+/* ============================================================
+   CREATIVE NAVBAR — live status, sliding underline, mobile menu
+   ============================================================ */
+const liveAuctions = () => ARTWORKS.filter(a => a.type === "auction" && !a.ended);
+
+function renderTopbar(){
+  const live = liveAuctions();
+  const stat = document.getElementById("liveStat");
+  const next = document.getElementById("closingNext");
+  if (live.length){
+    stat.innerHTML = `<span class="lpulse"></span>${live.length} ${live.length===1?"auction":"auctions"} live`;
+    const soon = [...live].sort((a,b)=>a.closesAt-b.closesAt)[0];
+    next.innerHTML = `<span>Closing next</span>
+      <a class="cn-title" href="#/work/${soon.id}">${soon.title}</a>
+      <span class="cn-time" data-closes="${soon.closesAt}" data-fmt="short">${shortCountdown(soon.closesAt)}</span>`;
+    next.style.display = "";
+  } else {
+    stat.innerHTML = `<span class="lpulse" style="animation:none;background:var(--muted)"></span>Browse available works`;
+    next.style.display = "none";
+  }
+}
+
+// featured auction (hero) — surfaces the soonest-closing live auction
+function renderFeatured(){
+  const el = document.getElementById("featuredWork");
+  if (!el) return;
+  const live = liveAuctions();
+  if (!live.length){ el.style.display = "none"; return; }
+  const a = [...live].sort((x,y)=>x.closesAt - y.closesAt)[0];
+  el.style.display = "";
+  el.innerHTML = `
+    <a class="feature-card" href="#/work/${a.id}" aria-label="Featured auction — ${a.title}">
+      <div class="feature-media">
+        <div class="canvas" style="${canvasStyle(a)}"></div>
+        <span class="feature-flag"><span class="dot"></span>Live · Ending soon</span>
+        <span class="feature-glare"></span>
+      </div>
+      <div class="feature-glass">
+        <h3>${a.title}</h3>
+        <div class="fg-meta">${a.year} · ${a.medium}</div>
+        <div class="fg-row">
+          <div class="fg-bid"><span class="k">Current bid</span><div class="v">${money(a.currentBid)}</div></div>
+          <div class="fg-time"><span class="k">Ends in</span><div class="v" data-closes="${a.closesAt}" data-fmt="short">${shortCountdown(a.closesAt)}</div></div>
+        </div>
+        <span class="btn feature-cta">Place a bid
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </a>`;
+}
+
+// sliding accent underline that glides between nav items
+const navMain  = document.querySelector("nav.main");
+const navInk   = document.createElement("span");
+navInk.className = "nav-ink";
+navMain.appendChild(navInk);
+const navLinks = [...navMain.querySelectorAll("a")];
+const activeNav = () => navMain.querySelector("a.active") || navLinks[0];
+function moveInk(el){
+  if (!el) return;
+  navInk.style.opacity = "1";
+  navInk.style.width = el.offsetWidth + "px";
+  navInk.style.transform = `translateX(${el.offsetLeft}px)`;
+}
+function setActiveNav(el){
+  navLinks.forEach(x=>x.classList.remove("active"));
+  if (el) el.classList.add("active");
+  moveInk(activeNav());
+}
+navLinks.forEach(a => a.addEventListener("mouseenter", ()=>moveInk(a)));
+navMain.addEventListener("mouseleave", ()=>moveInk(activeNav()));
+navMain.querySelector('[data-nav="works"]')?.addEventListener("click", ()=>{
+  document.querySelector('.filt[data-filter="all"]')?.click();
+  setActiveNav(navMain.querySelector('[data-nav="works"]'));
+});
+navMain.querySelector('[data-nav="auction"]')?.addEventListener("click", ()=>{
+  setActiveNav(navMain.querySelector('[data-nav="auction"]'));
+});
+document.getElementById("liveStat").addEventListener("click", ()=>{
+  document.querySelector('.filt[data-filter="auction"]')?.click();
+  setActiveNav(navMain.querySelector('[data-nav="auction"]'));
+});
+
+// mobile menu overlay
+const menuOverlay = document.getElementById("menuOverlay");
+const menuBtn = document.getElementById("menuBtn");
+const openMenu  = ()=>{ menuOverlay.classList.add("open"); menuBtn.setAttribute("aria-expanded","true"); document.body.style.overflow="hidden"; };
+const closeMenu = ()=>{ menuOverlay.classList.remove("open"); menuBtn.setAttribute("aria-expanded","false"); document.body.style.overflow=""; };
+menuBtn.addEventListener("click", openMenu);
+document.getElementById("menuClose").addEventListener("click", closeMenu);
+menuOverlay.querySelectorAll("[data-menu-link]").forEach(a=>{
+  a.addEventListener("click", ()=>{
+    const k = a.dataset.menuLink;
+    if (k === "works"){ document.querySelector('.filt[data-filter="all"]')?.click(); setActiveNav(navMain.querySelector('[data-nav="works"]')); }
+    if (k === "auction"){ document.querySelector('.filt[data-filter="auction"]')?.click(); setActiveNav(navMain.querySelector('[data-nav="auction"]')); }
+    closeMenu();
+  });
+});
+document.getElementById("menuSignin").addEventListener("click",(e)=>{ e.preventDefault(); closeMenu(); openModal("signin"); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && menuOverlay.classList.contains("open")) closeMenu(); });
+
+function initInk(){ moveInk(activeNav()); }
+window.addEventListener("resize", initInk, {passive:true});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(initInk);
+
+/* ============================================================
+   HEADER SCROLL STATE
+   ============================================================ */
+const hdr = document.getElementById("hdr");
+const onScroll = ()=> hdr.classList.toggle("scrolled", window.scrollY > 8);
+window.addEventListener("scroll", onScroll, {passive:true});
+
+/* ============================================================
+   MAGIC CARD — cursor-tracked glass glare on artwork cards
+   ============================================================ */
+document.addEventListener("pointermove",(e)=>{
+  const card = e.target.closest(".card");
+  if (!card) return;
+  const f = card.querySelector(".frame");
+  if (!f) return;
+  const r = f.getBoundingClientRect();
+  f.style.setProperty("--mx", ((e.clientX - r.left)/r.width*100).toFixed(1)+"%");
+  f.style.setProperty("--my", ((e.clientY - r.top)/r.height*100).toFixed(1)+"%");
+}, {passive:true});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderGrid();
+route();
+renderTopbar();
+tick();
+onScroll();
+bindForm();
+initInk();
+initData();   // override sample data with live works from Supabase (if configured)
+</script>
+</body>
+</html>
