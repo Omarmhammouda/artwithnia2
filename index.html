@@ -666,14 +666,28 @@
   }
   .modal p{ font-size:13.5px; color:var(--ink-2); margin:10px 0 26px; line-height:1.6; }
   .modal label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:9px; }
-  .modal input[type=email]{
+  .modal input[type=email], .modal input[type=password]{
     width:100%; border:1px solid var(--line-2); background:var(--paper);
     border-radius:6px; padding:14px 15px; font-family:var(--sans);
     font-size:16px; color:var(--ink); outline:none;
     transition:border-color .3s var(--ease), box-shadow .3s var(--ease);
   }
-  .modal input[type=email]:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(33,31,27,.06); }
+  .modal input[type=email]:focus, .modal input[type=password]:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(33,31,27,.06); }
   .modal .btn{ margin-top:16px; }
+  .modal .auth-alt{ margin-top:18px; font-size:12.5px; color:var(--muted); text-align:center; }
+  .modal .auth-alt a{ color:var(--ink); border-bottom:1px solid var(--line-2); padding-bottom:1px; transition:border-color .3s var(--ease); }
+  .modal .auth-alt a:hover{ border-color:var(--ink); }
+  .modal .orders{ margin-top:18px; }
+  .modal .orders-h{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); font-weight:600; margin:0 0 8px; }
+  .modal .orders-empty{ font-size:13px; color:var(--ink-2); line-height:1.6; margin:6px 0 0; }
+  .modal .orders ul{ list-style:none; margin:0; padding:0; max-height:240px; overflow:auto; }
+  .modal .orders li{ padding:12px 0; border-top:1px solid var(--line); }
+  .modal .orders li:first-child{ border-top:0; }
+  .modal .o-main{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  .modal .o-title{ font-family:var(--serif); font-size:16px; }
+  .modal .o-kind{ font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink); font-weight:600; white-space:nowrap; }
+  .modal .o-meta{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:3px; font-size:12.5px; color:var(--ink-2); font-variant-numeric:tabular-nums; }
+  .modal .o-status{ text-transform:capitalize; color:var(--muted); letter-spacing:.02em; }
   .modal .nopass{
     margin-top:18px; font-size:12px; color:var(--muted); text-align:center;
     display:flex; align-items:center; justify-content:center; gap:8px;
@@ -873,20 +887,7 @@
     <button class="x" id="closeModal" aria-label="Close">
       <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
     </button>
-    <div id="modalBody">
-      <span class="eyebrow">Collector access</span>
-      <h3 class="serif" id="signinTitle">Sign in</h3>
-      <p>Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.</p>
-      <form id="signinForm">
-        <label for="email">Email address</label>
-        <input type="email" id="email" name="email" placeholder="you@email.com" required autocomplete="email" />
-        <button class="btn block" type="submit">Send me a sign-in link</button>
-      </form>
-      <div class="nopass">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/></svg>
-        No password needed — ever.
-      </div>
-    </div>
+    <div id="modalBody"><!-- rendered by JS: auth / account / confirmation --></div>
   </div>
 </div>
 
@@ -1320,8 +1321,8 @@ function renderActionBar(a){
         ${a.buyNow ? `<button class="btn ghost" id="abBuy">Buy now</button>` : ""}
       </div>`;
   }
-  bar.querySelector("#abReserve")?.addEventListener("click", ()=>openModal("reserve", a));
-  bar.querySelector("#abBuy")?.addEventListener("click", ()=>openModal("buynow", a));
+  bar.querySelector("#abReserve")?.addEventListener("click", ()=>requestReserve(a));
+  bar.querySelector("#abBuy")?.addEventListener("click", ()=>requestBuy(a));
   bar.querySelector("#abBid")?.addEventListener("click", ()=>{
     const form = document.querySelector(".bidform");
     if (form){
@@ -1361,16 +1362,16 @@ function renderDetail(a){
 }
 
 function bindDetailActions(a){
-  // Buy now → reserve (requires sign-in feel)
+  // Reserve a buy-now piece → saved as an order
   const reserve = document.getElementById("reserveBtn");
   if (reserve){
-    reserve.addEventListener("click", ()=>openModal("reserve", a));
+    reserve.addEventListener("click", ()=>requestReserve(a));
   }
 
-  // Auction "Buy now" → immediate acquire flow
+  // Auction "Buy now" → saved as an order
   const buyNow = document.getElementById("buyNowBtn");
   if (buyNow){
-    buyNow.addEventListener("click", ()=>openModal("buynow", a));
+    buyNow.addEventListener("click", ()=>requestBuy(a));
   }
 
   // Place bid
@@ -1388,15 +1389,11 @@ function bindDetailActions(a){
         input.focus();
         return;
       }
-      // accept
-      a.currentBid = val;
-      a.bids += 1;
-      a.history.unshift({name:"You", amount:val, at:Date.now()});
-      renderDetail(a);          // re-render panel with new state
-      const cur = document.getElementById("curBid");
-      if (cur) cur.classList.add("flash");
-      // surface "signed-in to bid" reassurance once
-      openModal("bid", a);
+      if (!currentUser){
+        openAuth({ note:"Sign in or create an account to place your bid.", then: ()=>doBid(a, val) });
+        return;
+      }
+      doBid(a, val);
     });
   }
 }
@@ -1449,68 +1446,184 @@ const overlay = document.getElementById("overlay");
 const modalBody = document.getElementById("modalBody");
 let lastFocus = null;
 
-const DEFAULT_MODAL = modalBody.innerHTML;
-
-function openModal(context, a){
-  lastFocus = document.activeElement;
-  // contextual heading copy
-  let intro = DEFAULT_MODAL;
-  if (context === "reserve"){
-    intro = DEFAULT_MODAL
-      .replace("Collector access","Reserve a work")
-      .replace("Sign in","Reserve this piece")
-      .replace("Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.",
-               `Enter your email to reserve <em>${a.title}</em>. Nia will follow up personally — nothing is charged here.`)
-      .replace("Send me a sign-in link","Send me a sign-in link");
-  } else if (context === "bid"){
-    intro = DEFAULT_MODAL
-      .replace("Collector access","Confirm your bid")
-      .replace("Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.",
-               "Sign in to confirm and track your bid. We’ll send a secure link to your inbox.");
-  } else if (context === "buynow"){
-    intro = DEFAULT_MODAL
-      .replace("Collector access","Acquire now")
-      .replace("Sign in","Buy it now")
-      .replace("Enter your email to bid in auctions and reserve works. We’ll send a secure link to continue.",
-               `Enter your email to acquire <em>${a.title}</em>${a.buyNow?` at the buy-now price of ${money(a.buyNow)}`:""}. Nia will follow up to arrange payment — nothing is charged here.`);
-  }
-  modalBody.innerHTML = intro;
-  bindForm();
-  overlay.classList.add("open");
-  document.body.style.overflow = "hidden";
-  setTimeout(()=>{ const i=document.getElementById("email"); if(i) i.focus(); },60);
+/* ---- Auth state (Supabase email + password) ---- */
+let currentUser = null;
+let pendingAction = null;   // re-run after a successful sign-in
+function renderAuth(){
+  const label = currentUser ? "Account" : "Sign in";
+  const pill = document.getElementById("openSignin");
+  if (pill) pill.innerHTML = `<span class="sdot"></span>${label}`;
+  const menu = document.getElementById("menuSignin");
+  if (menu) menu.innerHTML = `<span class="sdot"></span>${label}`;
+  const foot = document.getElementById("openSignin2");
+  if (foot) foot.textContent = label;
 }
-function closeModal(){
-  overlay.classList.remove("open");
-  document.body.style.overflow = "";
-  modalBody.innerHTML = DEFAULT_MODAL;
-  bindForm();
-  if (lastFocus) lastFocus.focus();
-}
-function bindForm(){
-  const form = document.getElementById("signinForm");
-  if (!form) return;
-  form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    const email = document.getElementById("email").value.trim();
-    if (!email) return;
-    modalBody.innerHTML = `
-      <div class="sent">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3 class="serif" style="margin-top:0">Check your inbox</h3>
-        <p style="margin:10px 0 0">We’ve sent a secure sign-in link to <b style="color:var(--ink)">${email}</b>. It expires in 15 minutes.</p>
-        <button class="btn block ghost" id="doneBtn" style="margin-top:24px">Done</button>
-      </div>`;
-    const done = document.getElementById("doneBtn");
-    if (done) done.addEventListener("click", closeModal);
+if (sb){
+  // fires immediately with the persisted session, and on every sign-in / sign-out
+  sb.auth.onAuthStateChange((_event, session)=>{
+    currentUser = session ? session.user : null;
+    renderAuth();
   });
 }
 
-document.getElementById("openSignin").addEventListener("click",(e)=>{ e.preventDefault(); openModal("signin"); });
-document.getElementById("openSignin2").addEventListener("click",(e)=>{ e.preventDefault(); openModal("signin"); });
+function showModal(){ overlay.classList.add("open"); document.body.style.overflow = "hidden"; }
+function closeModal(){
+  overlay.classList.remove("open");
+  document.body.style.overflow = "";
+  if (lastFocus) lastFocus.focus();
+}
 document.getElementById("closeModal").addEventListener("click", closeModal);
 overlay.addEventListener("click",(e)=>{ if(e.target===overlay) closeModal(); });
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && overlay.classList.contains("open")) closeModal(); });
+
+/* ---- sign in / create account ---- */
+function openAuth(opts){
+  opts = opts || {};
+  pendingAction = typeof opts.then === "function" ? opts.then : null;
+  lastFocus = document.activeElement;
+  renderAuthForm(opts.signup ? "signup" : "signin", opts.note || "");
+  showModal();
+  setTimeout(()=>document.getElementById("authEmail")?.focus(), 60);
+}
+function renderAuthForm(mode, note){
+  const signup = mode === "signup";
+  const lead = note || (signup
+    ? "Create an account to reserve works, place bids, and track your orders."
+    : "Sign in to reserve works, place bids, and see your orders.");
+  modalBody.innerHTML = `
+    <span class="eyebrow">Collector access</span>
+    <h3 class="serif" id="signinTitle">${signup ? "Create account" : "Sign in"}</h3>
+    <p>${lead}</p>
+    <form id="authForm" novalidate>
+      <label for="authEmail">Email address</label>
+      <input type="email" id="authEmail" placeholder="you@email.com" required autocomplete="email" />
+      <label for="authPass" style="margin-top:14px">Password</label>
+      <input type="password" id="authPass" placeholder="At least 6 characters" required minlength="6" autocomplete="${signup ? "new-password" : "current-password"}" />
+      <button class="btn block" type="submit">${signup ? "Create account" : "Sign in"}</button>
+    </form>
+    <p class="auth-alt">${signup
+      ? `Already have an account? <a href="#" id="toSignin">Sign in</a>`
+      : `New here? <a href="#" id="toSignup">Create an account</a>`}</p>`;
+  document.getElementById("toSignup")?.addEventListener("click",(e)=>{ e.preventDefault(); renderAuthForm("signup", note); document.getElementById("authEmail")?.focus(); });
+  document.getElementById("toSignin")?.addEventListener("click",(e)=>{ e.preventDefault(); renderAuthForm("signin", note); document.getElementById("authEmail")?.focus(); });
+  document.getElementById("authForm").addEventListener("submit",(e)=>handleAuth(e, mode));
+}
+function authError(msg){
+  const form = document.getElementById("authForm");
+  if (!form) return;
+  let el = document.getElementById("authErr");
+  if (!el){ el = document.createElement("p"); el.id = "authErr"; el.style.cssText = "margin:12px 0 0; font-size:12.5px; color:var(--accent-ink);"; form.appendChild(el); }
+  el.textContent = msg;
+}
+async function handleAuth(e, mode){
+  e.preventDefault();
+  const email = (document.getElementById("authEmail").value || "").trim();
+  const pass  = document.getElementById("authPass").value || "";
+  if (!email || pass.length < 6){ authError("Enter your email and a password of at least 6 characters."); return; }
+  const btn = document.querySelector("#authForm button[type=submit]");
+  const orig = btn.textContent;
+  document.getElementById("authErr")?.remove();
+  btn.disabled = true; btn.textContent = mode === "signup" ? "Creating…" : "Signing in…";
+  if (!sb){ authError("Accounts aren’t configured yet."); btn.disabled = false; btn.textContent = orig; return; }
+  try{
+    if (mode === "signup"){
+      const { data, error } = await sb.auth.signUp({ email, password: pass });
+      if (error){ authError(error.message); btn.disabled = false; btn.textContent = orig; return; }
+      if (!data.session){
+        // project requires email confirmation
+        openInfo("Confirm your email", `<p style="margin:10px 0 0">We sent a confirmation link to <b style="color:var(--ink)">${email}</b>. Click it, then come back and sign in.</p>`);
+        return;
+      }
+      onAuthSuccess();
+    } else {
+      const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+      if (error){ authError(error.message); btn.disabled = false; btn.textContent = orig; return; }
+      onAuthSuccess();
+    }
+  } catch(err){ authError("Network error — please try again."); btn.disabled = false; btn.textContent = orig; }
+}
+function onAuthSuccess(){
+  const act = pendingAction; pendingAction = null;
+  closeModal();
+  if (act) setTimeout(act, 140);
+}
+
+/* ---- account + my orders ---- */
+async function openAccount(){
+  lastFocus = document.activeElement;
+  modalBody.innerHTML = `
+    <span class="eyebrow">Your account</span>
+    <h3 class="serif" id="signinTitle" style="word-break:break-word">${currentUser ? currentUser.email : "Account"}</h3>
+    <div class="orders" id="ordersList"><p class="orders-empty">Loading your orders…</p></div>
+    <button class="btn block ghost" id="signOutBtn" style="margin-top:20px">Sign out</button>`;
+  document.getElementById("signOutBtn").addEventListener("click", async ()=>{
+    if (sb){ try{ await sb.auth.signOut(); }catch(e){} }
+    closeModal();
+  });
+  showModal();
+  if (!sb) return;
+  const { data, error } = await sb.from("orders").select("*").order("created_at",{ ascending:false });
+  const list = document.getElementById("ordersList");
+  if (!list) return;
+  if (error){ list.innerHTML = `<p class="orders-empty">Couldn’t load your orders right now.</p>`; return; }
+  if (!data || !data.length){ list.innerHTML = `<p class="orders-empty">No orders yet — reserve a piece or place a bid and it’ll appear here.</p>`; return; }
+  const kindLabel = { reserve:"Reserved", buy:"Buy now", bid:"Bid" };
+  list.innerHTML = `<h4 class="orders-h">Your orders</h4><ul>` + data.map(o=>`
+    <li>
+      <div class="o-main"><span class="o-title">${o.work_title || o.work_id || "Work"}</span><span class="o-kind">${kindLabel[o.kind] || o.kind}</span></div>
+      <div class="o-meta"><span>${o.amount != null ? money(Number(o.amount)) : "—"}</span><span class="o-status">${o.status || "requested"}</span></div>
+    </li>`).join("") + `</ul>`;
+}
+
+/* ---- confirmation panel ---- */
+function openInfo(title, bodyHTML){
+  lastFocus = document.activeElement;
+  modalBody.innerHTML = `
+    <div class="sent">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3 class="serif" style="margin-top:0">${title}</h3>
+      ${bodyHTML}
+      <button class="btn block ghost" id="doneBtn" style="margin-top:24px">Done</button>
+    </div>`;
+  document.getElementById("doneBtn")?.addEventListener("click", closeModal);
+  showModal();
+}
+
+/* ---- orders: reserve / buy / bid ---- */
+async function placeOrder(kind, a, amount){
+  if (!currentUser){
+    openAuth({ note: kind === "bid"
+        ? "Sign in or create an account to place your bid."
+        : `Sign in or create an account to ${kind === "reserve" ? "reserve" : "buy"} this piece.`,
+      then: ()=>placeOrder(kind, a, amount) });
+    return false;
+  }
+  if (!sb) return false;
+  const { error } = await sb.from("orders").insert({ work_id:a.id, work_title:a.title, kind, amount: amount != null ? amount : null });
+  if (error){ openInfo("Something went wrong", `<p style="margin:10px 0 0">${error.message}</p>`); return false; }
+  return true;
+}
+async function requestReserve(a){
+  if (await placeOrder("reserve", a, a.price))
+    openInfo("Reservation received", `<p style="margin:10px 0 0">Your request to reserve <em>${a.title}</em> is saved to your account. Nia will follow up by email to arrange payment and delivery.</p>`);
+}
+async function requestBuy(a){
+  const amount = a.buyNow != null ? a.buyNow : a.price;
+  if (await placeOrder("buy", a, amount))
+    openInfo("Request received", `<p style="margin:10px 0 0">Your request to acquire <em>${a.title}</em>${amount ? ` at ${money(amount)}` : ""} is saved to your account. Nia will follow up to arrange payment.</p>`);
+}
+async function doBid(a, val){
+  a.currentBid = val; a.bids += 1;
+  a.history.unshift({ name:"You", amount:val, at:Date.now() });
+  renderDetail(a);
+  document.getElementById("curBid")?.classList.add("flash");
+  if (sb){ try{ await sb.from("orders").insert({ work_id:a.id, work_title:a.title, kind:"bid", amount:val }); }catch(e){} }
+  openInfo("Bid placed", `<p style="margin:10px 0 0">Your bid of <b style="color:var(--ink)">${money(val)}</b> on <em>${a.title}</em> is saved to your account. We’ll let you know if you’re outbid.</p>`);
+}
+
+document.getElementById("openSignin").addEventListener("click",(e)=>{ e.preventDefault(); currentUser ? openAccount() : openAuth(); });
+document.getElementById("openSignin2").addEventListener("click",(e)=>{ e.preventDefault(); currentUser ? openAccount() : openAuth(); });
+renderAuth();
 
 /* ============================================================
    CREATIVE NAVBAR — live status, sliding underline, mobile menu
@@ -1610,7 +1723,7 @@ menuOverlay.querySelectorAll("[data-menu-link]").forEach(a=>{
     closeMenu();
   });
 });
-document.getElementById("menuSignin").addEventListener("click",(e)=>{ e.preventDefault(); closeMenu(); openModal("signin"); });
+document.getElementById("menuSignin").addEventListener("click",(e)=>{ e.preventDefault(); closeMenu(); currentUser ? openAccount() : openAuth(); });
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && menuOverlay.classList.contains("open")) closeMenu(); });
 
 function initInk(){ moveInk(activeNav()); }
@@ -1645,7 +1758,6 @@ route();
 renderTopbar();
 tick();
 onScroll();
-bindForm();
 initInk();
 initData();   // override sample data with live works from Supabase (if configured)
 </script>

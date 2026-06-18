@@ -149,9 +149,63 @@ best (they're shown in a 4:5 / framed crop).
 as "Auction closed". To show a sold result, also set `ended = true` and
 `final_price`.
 
-> Bidding, sign-in, and "reserve / buy now" are front-end flows (no payments are
-> taken and bids aren't written back to the database). They're ready to be wired
-> to a backend later, but the **works catalog is fully live** from Supabase.
+> The **works catalog** and **orders** are live from Supabase. **Payments are
+> not taken online** — orders are saved as requests and Nia follows up to
+> arrange payment/delivery.
+
+---
+
+## 4. Accounts & orders (email + password)
+
+Visitors create an account (email + password), stay signed in across visits, and
+when they **reserve**, **buy-now**, or **place a bid**, it's saved as an *order*
+on their account. You see every order in the dashboard; each visitor sees only
+their own.
+
+### a) Create the `orders` table
+SQL Editor → run this once:
+
+```sql
+create table if not exists public.orders (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  work_id     text,                       -- slug of the work
+  work_title  text,                       -- snapshot of the title
+  kind        text not null,              -- 'reserve' | 'buy' | 'bid'
+  amount      numeric,
+  status      text not null default 'requested',   -- you update this in the dashboard
+  created_at  timestamptz default now()
+);
+
+alter table public.orders enable row level security;
+-- each signed-in user can create and read ONLY their own orders
+drop policy if exists "own orders insert" on public.orders;
+create policy "own orders insert" on public.orders
+  for insert with check (auth.uid() = user_id);
+drop policy if exists "own orders read" on public.orders;
+create policy "own orders read" on public.orders
+  for select using (auth.uid() = user_id);
+```
+
+You (as the project owner) see **all** orders in **Table Editor → `orders`**.
+Update each order's `status` (e.g. `requested` → `confirmed` → `fulfilled`) as you
+process it.
+
+### b) Turn on password sign-up
+**Authentication → Providers → Email** must be enabled (it is by default).
+
+- **For instant access** (recommended to start): **Authentication → Providers →
+  Email → turn _off_ "Confirm email."** New accounts can sign in immediately.
+- **For confirmed emails** (more secure): leave "Confirm email" **on** — new users
+  get a confirmation link first. The site handles both: if confirmation is on,
+  sign-up shows a "Confirm your email" message. If you keep it on, also set
+  **URL Configuration → Site URL** to your live site (e.g.
+  `https://artwithnia.pages.dev`) and add it to **Redirect URLs** as
+  `https://artwithnia.pages.dev/**`, and add **custom SMTP** (Authentication →
+  SMTP Settings) so confirmation emails arrive reliably.
+
+> Sessions persist automatically — once signed in, visitors stay signed in on
+> that device until they sign out.
 
 ---
 
