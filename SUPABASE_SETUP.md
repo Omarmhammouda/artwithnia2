@@ -209,8 +209,95 @@ process it.
 
 ---
 
+## 5. Automatic "you won" emails when an auction ends
+
+A static site can't react to an auction closing, so this runs server-side: a
+**scheduled Supabase Edge Function** (`supabase/functions/notify-auction-winners/`)
+that, every few minutes, finds auctions whose `closes_at` has passed, picks the
+**highest bid** from `orders`, emails that bidder, and marks the auction settled
+so it never double-sends. Email is sent via **Resend**.
+
+### a) Add the settlement flag
+SQL Editor → run once:
+
+```sql
+alter table public.works
+  add column if not exists winner_notified boolean not null default false;
+```
+
+### b) Set up Resend (email delivery)
+1. Create an account at **resend.com**.
+2. **Add & verify your domain** `artwithnia.com` (add the DNS records Resend
+   gives you) so emails send from `nia@artwithnia.com`. *(To test first, Resend
+   lets you send from `onboarding@resend.dev` to your own address.)*
+3. Create an **API key** and copy it.
+
+### c) Deploy the function
+**Dashboard (no CLI):** Edge Functions → **Create function** → name it exactly
+`notify-auction-winners` → paste the contents of
+`supabase/functions/notify-auction-winners/index.ts` → **Deploy**.
+
+**Or CLI:**
+```bash
+supabase login
+supabase functions deploy notify-auction-winners --project-ref wtngjmtrxgdgoyjbqily
+```
+
+### d) Add the secrets
+Edge Functions → **Secrets** (or `supabase secrets set …`):
+- `RESEND_API_KEY` — from step (b)  *(required)*
+- `WINNER_FROM_EMAIL` — e.g. `Art with Nia <nia@artwithnia.com>`  *(optional)*
+- `SITE_URL` — `https://artwithnia.com`  *(optional)*
+
+> `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically — you
+> don't set those. The service-role key stays inside the function (server-side
+> only) and is never exposed to the browser.
+
+### e) Schedule it (every 5 minutes)
+SQL Editor → run once (uses your **anon public** key, which is fine to embed):
+
+```sql
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
+select cron.schedule(
+  'notify-auction-winners',
+  '*/5 * * * *',
+  $$
+  select net.http_post(
+    url     := 'https://wtngjmtrxgdgoyjbqily.supabase.co/functions/v1/notify-auction-winners',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer YOUR_ANON_PUBLIC_KEY'
+    ),
+    body    := '{}'::jsonb
+  );
+  $$
+);
+```
+
+To **test now**, invoke it once from the dashboard (Edge Functions → Run) or:
+```bash
+curl -X POST 'https://wtngjmtrxgdgoyjbqily.supabase.co/functions/v1/notify-auction-winners' \
+  -H 'Authorization: Bearer YOUR_ANON_PUBLIC_KEY'
+```
+With a test auction whose `closes_at` is in the past and a bid placed from a real
+account, that account should receive the email, and the work flips to
+`winner_notified = true`, `ended = true`, `final_price = <winning bid>`.
+
+> **⚠️ Important caveat — harden bids before real money changes hands.** Right
+> now a bid is just a row the user inserts; the database doesn't verify it beats
+> the current bid, and bids aren't shared live between visitors. So "highest bid"
+> is whatever the largest `orders` row is — fine for capturing interest, but it
+> could be gamed. For a real binding auction, add **server-side bid validation**
+> (a Postgres function / RPC that checks the bid and updates `works.current_bid`
+> atomically). Happy to build that next.
+
+---
+
 ## Deploying
 
 This is a static site (one `index.html`). Host it anywhere — Vercel, Netlify,
 Cloudflare Pages, GitHub Pages — by uploading the folder or connecting a repo.
-No build step is required.
+No build step is required. The `supabase/` folder is function source only — it
+is **not** served by the static host and does not affect the build.

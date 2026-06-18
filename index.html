@@ -1527,7 +1527,7 @@ async function handleAuth(e, mode){
   if (!sb){ authError("Accounts aren’t configured yet."); btn.disabled = false; btn.textContent = orig; return; }
   try{
     if (mode === "signup"){
-      const { data, error } = await sb.auth.signUp({ email, password: pass });
+      const { data, error } = await sb.auth.signUp({ email, password: pass, options: { emailRedirectTo: "https://artwithnia.com/" } });
       if (error){ authError(error.message); btn.disabled = false; btn.textContent = orig; return; }
       if (!data.session){
         // project requires email confirmation
