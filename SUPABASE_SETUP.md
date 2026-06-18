@@ -295,6 +295,69 @@ account, that account should receive the email, and the work flips to
 
 ---
 
+## 6. Live bidding (real-time, validated)
+
+Makes bids real: a server function validates each bid, atomically updates the
+work's current bid, and records it in a public `bids` ledger — and **Realtime**
+pushes the new bid to every open page instantly. **Run this SQL once** (until you
+do, placing a bid will show "Bid not placed").
+
+```sql
+-- public bid ledger (anonymized labels)
+create table if not exists public.bids (
+  id           uuid primary key default gen_random_uuid(),
+  work_id      text not null,
+  user_id      uuid not null default auth.uid(),
+  bidder_label text not null,
+  amount       numeric not null,
+  created_at   timestamptz not null default now()
+);
+alter table public.bids enable row level security;
+drop policy if exists "public read bids" on public.bids;
+create policy "public read bids" on public.bids for select using (true);
+-- (no insert policy — rows are created only by place_bid())
+
+-- validated, atomic bid
+create or replace function public.place_bid(p_work_id text, p_amount numeric)
+returns public.works
+language plpgsql security definer set search_path = public as $$
+declare w public.works; uid uuid := auth.uid(); min_next numeric; label text;
+begin
+  if uid is null then raise exception 'Please sign in to bid.'; end if;
+  select * into w from public.works where id = p_work_id for update;
+  if not found then raise exception 'Work not found.'; end if;
+  if w.type <> 'auction' then raise exception 'This work is not an auction.'; end if;
+  if coalesce(w.ended,false) or (w.closes_at is not null and w.closes_at < now())
+    then raise exception 'This auction has closed.'; end if;
+  min_next := coalesce(w.current_bid,0) + coalesce(w.min_increment,100);
+  if p_amount < min_next then
+    raise exception 'Your bid must be at least $%.', to_char(min_next,'FM999,999,999');
+  end if;
+  label := 'Collector ' || upper(substr(md5(uid::text),1,4));
+  update public.works set current_bid = p_amount, bids = coalesce(bids,0)+1
+    where id = p_work_id returning * into w;
+  insert into public.bids  (work_id, bidder_label, amount) values (p_work_id, label, p_amount);
+  insert into public.orders (work_id, work_title, kind, amount) values (p_work_id, w.title, 'bid', p_amount);
+  return w;
+end; $$;
+grant execute on function public.place_bid(text, numeric) to authenticated;
+
+-- enable Realtime on works + bids (ignore "already a member" notices)
+do $$ begin alter publication supabase_realtime add table public.works; exception when others then null; end $$;
+do $$ begin alter publication supabase_realtime add table public.bids;  exception when others then null; end $$;
+```
+
+That's the whole thing — no Edge Function, no extra config. After it runs:
+- A bid is **server-validated** (must beat current + increment, auction not closed) and the work's `current_bid` / `bids` update atomically — so it **persists** and survives reload.
+- The bid appears in the **public `bids` ledger** (shown in the bid history, your own bids marked "You").
+- **Realtime** updates the current bid + history on every open page within ~a second.
+
+> You can also enable Realtime via the dashboard (Database → Replication →
+> `supabase_realtime` → toggle on `works` and `bids`) instead of the last two SQL
+> statements.
+
+---
+
 ## Deploying
 
 This is a static site (one `index.html`). Host it anywhere — Vercel, Netlify,

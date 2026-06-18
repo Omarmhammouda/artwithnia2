@@ -1276,10 +1276,27 @@ function bidPanel(a){
     </div>` : ""}`;
 }
 
-function renderBidHistory(a){
+async function renderBidHistory(a){
   const el = document.getElementById("bidHistory");
   if (!el) return;
-  if (a.type !== "auction" || !a.history || !a.history.length){ el.style.display = "none"; el.innerHTML = ""; return; }
+  if (a.type !== "auction"){ el.style.display = "none"; el.innerHTML = ""; return; }
+
+  // live, shared bid ledger from Supabase; fall back to seeded history offline
+  let list = [];
+  if (sb){
+    const { data } = await sb.from("bids")
+      .select("bidder_label,amount,created_at,user_id")
+      .eq("work_id", a.id)
+      .order("created_at", { ascending:false })
+      .limit(30);
+    list = (data || []).map(b => {
+      const mine = currentUser && b.user_id === currentUser.id;
+      return { name: mine ? "You" : b.bidder_label, you: mine, amount:Number(b.amount), at: Date.parse(b.created_at) };
+    });
+  } else {
+    list = (a.history || []).map(b => ({ ...b, you: b.name === "You" }));
+  }
+  if (!list.length){ el.style.display = "none"; el.innerHTML = ""; return; }
   el.style.display = "";
   el.innerHTML = `
     <div class="bidlog-head">
@@ -1287,8 +1304,8 @@ function renderBidHistory(a){
       <span class="cnt">${a.bids} ${a.bids===1?"bid":"bids"}</span>
     </div>
     <ul class="bidlog-list">
-      ${a.history.map((b,i)=>`
-        <li class="${b.name==="You"?"you":""}" style="animation:rise .5s ${0.03*i}s var(--ease) both">
+      ${list.map((b,i)=>`
+        <li class="${b.you?"you":""}" style="animation:rise .5s ${0.03*i}s var(--ease) both">
           <span class="who"><span class="av"></span>${b.name}</span>
           <span class="amt">${money(b.amount)}</span>
           <span class="t">${ago(b.at)}</span>
@@ -1334,7 +1351,9 @@ function renderActionBar(a){
   document.body.classList.add("has-action-bar");
 }
 
+let activeWorkId = null;   // which work's detail is open (for live updates)
 function renderDetail(a){
+  activeWorkId = a.id;
   const s = statusOf(a);
   detailGrid.innerHTML = `
     <div class="stage">
@@ -1430,6 +1449,7 @@ function route(){
     viewDetail.classList.add("active");
     window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
   } else {
+    activeWorkId = null;
     viewDetail.classList.remove("active");
     viewGallery.classList.add("active");
     renderFeatured();
@@ -1613,12 +1633,65 @@ async function requestBuy(a){
     openInfo("Request received", `<p style="margin:10px 0 0">Your request to acquire <em>${a.title}</em>${amount ? ` at ${money(amount)}` : ""} is saved to your account. Nia will follow up to arrange payment.</p>`);
 }
 async function doBid(a, val){
-  a.currentBid = val; a.bids += 1;
-  a.history.unshift({ name:"You", amount:val, at:Date.now() });
+  if (!sb){
+    // offline/demo fallback — local only
+    a.currentBid = val; a.bids += 1;
+    a.history.unshift({ name:"You", amount:val, at:Date.now() });
+    renderDetail(a);
+    document.getElementById("curBid")?.classList.add("flash");
+    openInfo("Bid placed", `<p style="margin:10px 0 0">Your bid of <b style="color:var(--ink)">${money(val)}</b> on <em>${a.title}</em> is recorded.</p>`);
+    return;
+  }
+  // server validates the bid and updates the work atomically
+  const { data, error } = await sb.rpc("place_bid", { p_work_id: a.id, p_amount: val });
+  if (error){
+    openInfo("Bid not placed", `<p style="margin:10px 0 0">${error.message || "Your bid couldn’t be placed — please try again."}</p>`);
+    renderDetail(a);   // refresh in case the current bid moved
+    return;
+  }
+  if (data){
+    if (data.current_bid != null) a.currentBid = Number(data.current_bid);
+    if (data.bids != null) a.bids = Number(data.bids);
+  }
   renderDetail(a);
   document.getElementById("curBid")?.classList.add("flash");
-  if (sb){ try{ await sb.from("orders").insert({ work_id:a.id, work_title:a.title, kind:"bid", amount:val }); }catch(e){} }
-  openInfo("Bid placed", `<p style="margin:10px 0 0">Your bid of <b style="color:var(--ink)">${money(val)}</b> on <em>${a.title}</em> is saved to your account. We’ll let you know if you’re outbid.</p>`);
+  openInfo("Bid placed", `<p style="margin:10px 0 0">Your bid of <b style="color:var(--ink)">${money(val)}</b> on <em>${a.title}</em> is in. You’ll be notified if you’re outbid.</p>`);
+}
+
+/* ---- realtime: live bids across every open page ---- */
+function applyWorkRow(row){
+  const a = byId(row.id);
+  if (!a) return;
+  if (row.current_bid != null) a.currentBid = Number(row.current_bid);
+  if (row.bids != null) a.bids = Number(row.bids);
+  if (row.ended != null) a.ended = !!row.ended;
+  if (row.final_price != null) a.finalPrice = Number(row.final_price);
+}
+function onWorkChange(row){
+  applyWorkRow(row);
+  renderTopbar();
+  if (document.getElementById("view-gallery").classList.contains("active")){ renderGrid(); renderFeatured(); }
+  if (activeWorkId === row.id){
+    const a = byId(row.id);
+    const cur = document.getElementById("curBid");
+    if (cur && row.current_bid != null){ cur.textContent = money(Number(row.current_bid)); cur.classList.remove("flash"); void cur.offsetWidth; cur.classList.add("flash"); }
+    const bc = document.getElementById("bidCount");
+    if (bc && row.bids != null) bc.textContent = `${row.bids} bids`;
+    const hint = document.getElementById("bidHint");
+    if (hint && a){ const minNext = a.currentBid + a.increment; hint.classList.remove("err"); hint.innerHTML = `Minimum bid <b>${money(minNext)}</b> · enter ${money(a.increment)} or more above the current bid.`; }
+    const abv = document.querySelector("#actionBar .ab-info .v");
+    if (abv && row.current_bid != null) abv.textContent = money(Number(row.current_bid));
+  }
+}
+function onBidInsert(row){
+  if (activeWorkId === row.work_id){ const a = byId(row.work_id); if (a) renderBidHistory(a); }
+}
+function setupRealtime(){
+  if (!sb || !sb.channel) return;
+  sb.channel("auction-live")
+    .on("postgres_changes", { event:"UPDATE", schema:"public", table:"works" }, (p)=>onWorkChange(p.new))
+    .on("postgres_changes", { event:"INSERT", schema:"public", table:"bids" }, (p)=>onBidInsert(p.new))
+    .subscribe();
 }
 
 document.getElementById("openSignin").addEventListener("click",(e)=>{ e.preventDefault(); currentUser ? openAccount() : openAuth(); });
@@ -1760,6 +1833,7 @@ tick();
 onScroll();
 initInk();
 initData();   // override sample data with live works from Supabase (if configured)
+setupRealtime();   // live bid updates across all viewers
 </script>
 </body>
 </html>
