@@ -320,8 +320,9 @@
      each keeps its natural proportions — click any for a bigger preview */
   .work-collage{
     column-count:3; column-gap:clamp(10px,1.2vw,16px);
-    padding-bottom:clamp(44px,6vw,84px);
+    padding:0 32px clamp(44px,6vw,84px);   /* full-width to the page gutter */
   }
+  @media (min-width:1500px){ .work-collage{ column-count:4; } }
   .work-collage .ws-fig{
     break-inside:avoid; margin:0 0 clamp(10px,1.2vw,16px);
     overflow:hidden; cursor:zoom-in; position:relative; background:var(--paper-2);
@@ -904,7 +905,7 @@
     /* portfolio: stack CTA, tighten carousel/strip */
     .pf-end{ grid-template-columns:1fr; align-items:start; gap:28px; }
     .pf-slide{ width:64vw; }
-    .work-collage{ column-count:1; }
+    .work-collage{ column-count:1; padding-left:20px; padding-right:20px; }
     .work-hero{ height:clamp(220px,42vh,360px); }
     .work-nav{ flex-direction:column; gap:22px; }
     .work-nav .wn{ max-width:100%; }
@@ -1023,7 +1024,9 @@
     <div class="work-hero" id="workHero"><!-- cover injected --></div>
     <div class="wrap">
       <header id="workHead"><!-- eyebrow + title + intro + credits injected --></header>
-      <div class="work-collage" id="workStrip"><!-- collage of project images injected --></div>
+    </div>
+    <div class="work-collage" id="workStrip"><!-- collage of project images injected (full-width to padding) --></div>
+    <div class="wrap">
       <nav class="work-nav" id="workNav"><!-- prev / next injected --></nav>
     </div>
   </section>
