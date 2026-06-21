@@ -859,13 +859,20 @@
   }
   .modal p{ font-size:13.5px; color:var(--ink-2); margin:10px 0 26px; line-height:1.6; }
   .modal label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:9px; }
-  .modal input[type=email], .modal input[type=password]{
+  .modal input[type=email], .modal input[type=password], .modal input[type=text], .modal select, .modal textarea{
     width:100%; border:1px solid var(--line-2); background:var(--paper);
     border-radius:6px; padding:14px 15px; font-family:var(--sans);
     font-size:16px; color:var(--ink); outline:none;
     transition:border-color .3s var(--ease), box-shadow .3s var(--ease);
   }
-  .modal input[type=email]:focus, .modal input[type=password]:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(33,31,27,.06); }
+  .modal textarea{ resize:vertical; min-height:96px; line-height:1.5; }
+  .modal select{ appearance:none; -webkit-appearance:none; cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238d867a' stroke-width='1.5'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 15px center; padding-right:38px; }
+  .modal input:focus, .modal select:focus, .modal textarea:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(33,31,27,.06); }
+  .modal .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .modal .field + .field, .modal .field-row{ margin-top:14px; }
+  @media (max-width:560px){ .modal .field-row{ grid-template-columns:1fr; gap:0; } .modal .field-row .field + .field{ margin-top:14px; } }
   .modal .btn{ margin-top:16px; }
   .modal .auth-alt{ margin-top:18px; font-size:12.5px; color:var(--muted); text-align:center; }
   .modal .auth-alt a{ color:var(--ink); border-bottom:1px solid var(--line-2); padding-bottom:1px; transition:border-color .3s var(--ease); }
@@ -1039,7 +1046,7 @@
           <h1 class="serif">Meet <em>Nia</em></h1>
           <p class="pf-lead">A New York–based muralist and visual artist creating custom, site-specific work for businesses and public spaces. Blending abstract elements with recognizable forms, her murals elevate interiors and strengthen brand identity — expressive yet accessible, bold and emotionally driven. From cafés and gyms to wellness and community spaces, she treats every wall as a partnership.</p>
           <p class="pf-quote serif">“Every vision deserves to be seen — let’s bring yours to life.”</p>
-          <a class="pf-cta solid" href="mailto:nia@artwithnia.com">Start a commission</a>
+          <a class="pf-cta solid" href="mailto:nia@artwithnia.com" data-commission>Start a commission</a>
         </div>
         <figure class="pf-portrait">
           <img src="https://wtngjmtrxgdgoyjbqily.supabase.co/storage/v1/object/public/artworks/nia.avif" alt="Nia — muralist and visual artist — in front of one of her works" loading="eager">
@@ -1059,7 +1066,7 @@
 
     <div class="wrap">
       <section class="pf-end">
-        <a class="pf-end-tag serif" href="mailto:nia@artwithnia.com">Let’s make<br>something together</a>
+        <a class="pf-end-tag serif" href="mailto:nia@artwithnia.com" data-commission>Let’s make<br>something together</a>
         <div class="pf-end-cols">
           <div class="pf-end-col">
             <a href="#/auction">Current auction</a>
@@ -2101,6 +2108,82 @@ function openInfo(title, bodyHTML){
   document.getElementById("doneBtn")?.addEventListener("click", closeModal);
   showModal();
 }
+
+/* ---- commission inquiry form ---- */
+function openCommission(){
+  lastFocus = document.activeElement;
+  modalBody.innerHTML = `
+    <span class="eyebrow">Commission</span>
+    <h3 class="serif" id="signinTitle">Start a commission</h3>
+    <p>Tell Nia about your space and what you have in mind — she’ll get back to you personally.</p>
+    <form id="cmForm" novalidate>
+      <div class="field-row">
+        <div class="field"><label for="cmName">Name</label><input type="text" id="cmName" required autocomplete="name" /></div>
+        <div class="field"><label for="cmEmail">Email</label><input type="email" id="cmEmail" required autocomplete="email" placeholder="you@email.com" /></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="cmType">Project type</label>
+          <select id="cmType">
+            <option>Mural</option>
+            <option>Interior mural</option>
+            <option>Exterior / community mural</option>
+            <option>Commissioned painting</option>
+            <option>Other</option>
+          </select></div>
+        <div class="field"><label for="cmLocation">Location</label><input type="text" id="cmLocation" placeholder="City / neighborhood" /></div>
+      </div>
+      <div class="field"><label for="cmBudget">Budget (optional)</label><input type="text" id="cmBudget" placeholder="e.g. $2,000–5,000" /></div>
+      <div class="field"><label for="cmMessage">About the project</label><textarea id="cmMessage" required placeholder="The space, the wall size, timing, the look you’re after…"></textarea></div>
+      <button class="btn block" type="submit">Send inquiry</button>
+    </form>`;
+  document.getElementById("cmForm").addEventListener("submit", handleCommission);
+  showModal();
+  setTimeout(()=>document.getElementById("cmName")?.focus(), 60);
+}
+function cmError(msg){
+  const form = document.getElementById("cmForm"); if (!form) return;
+  let el = document.getElementById("cmErr");
+  if (!el){ el = document.createElement("p"); el.id = "cmErr"; el.style.cssText = "margin:12px 0 0;font-size:12.5px;color:var(--accent-ink)"; form.appendChild(el); }
+  el.textContent = msg;
+}
+function commissionMailto(d){
+  const subject = `Commission inquiry — ${d.name}`;
+  const body =
+    `Name: ${d.name}\nEmail: ${d.email}\nProject type: ${d.project_type}\n` +
+    `Location: ${d.location || "—"}\nBudget: ${d.budget || "—"}\n\n${d.message}`;
+  window.location.href = `mailto:nia@artwithnia.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+async function handleCommission(e){
+  e.preventDefault();
+  const d = {
+    name:         (document.getElementById("cmName").value || "").trim(),
+    email:        (document.getElementById("cmEmail").value || "").trim(),
+    project_type: document.getElementById("cmType").value,
+    location:     (document.getElementById("cmLocation").value || "").trim(),
+    budget:       (document.getElementById("cmBudget").value || "").trim(),
+    message:      (document.getElementById("cmMessage").value || "").trim(),
+  };
+  if (!d.name || !d.email || !d.message){ cmError("Please add your name, email, and a note about the project."); return; }
+  const btn = document.querySelector("#cmForm button[type=submit]"); const orig = btn.textContent;
+  document.getElementById("cmErr")?.remove();
+  btn.disabled = true; btn.textContent = "Sending…";
+  try{
+    if (!sb) throw new Error("no-backend");
+    const { error } = await sb.from("commissions").insert(d);
+    if (error) throw error;
+    sb.functions.invoke("notify-commission", { body: d }).catch(()=>{});   // best-effort email to Nia
+    openInfo("Thanks — your inquiry is in", `<p style="margin:10px 0 0">Nia will get back to you at <b style="color:var(--ink)">${d.email}</b> soon. Thank you for reaching out.</p>`);
+  } catch(err){
+    // fallback so the inquiry always reaches Nia, even before the backend is set up
+    commissionMailto(d);
+    openInfo("Almost there", `<p style="margin:10px 0 0">We’ve opened your email app with the details — just press send to reach Nia at <b style="color:var(--ink)">nia@artwithnia.com</b>.</p>`);
+  }
+}
+// open the commission form from any [data-commission] trigger
+document.addEventListener("click",(e)=>{
+  const t = e.target.closest("[data-commission]");
+  if (t){ e.preventDefault(); openCommission(); }
+});
 
 /* ---- orders: reserve / buy / bid ---- */
 async function placeOrder(kind, a, amount){

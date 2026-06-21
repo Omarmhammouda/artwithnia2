@@ -431,6 +431,56 @@ Notes:
 
 ---
 
+## 8. Commission inquiries ("Start a commission" form)
+
+The "Start a commission" / "Let's make something together" buttons open a form.
+On submit it **saves the inquiry** to a `commissions` table and **emails Nia**.
+(If neither is set up yet, the form falls back to opening the visitor's email app
+pre-filled to `nia@artwithnia.com`, so nothing is ever lost.)
+
+### a) Create the `commissions` table (saves every inquiry)
+
+Run in **SQL Editor → New query**:
+
+```sql
+create table if not exists public.commissions (
+  id           uuid primary key default gen_random_uuid(),
+  name         text not null,
+  email        text not null,
+  project_type text,
+  location     text,
+  budget       text,
+  message      text not null,
+  created_at   timestamptz default now()
+);
+
+-- anyone can submit an inquiry; nobody can read them through the public API
+alter table public.commissions enable row level security;
+create policy "anyone can submit a commission" on public.commissions
+  for insert with check (true);
+```
+
+You'll see submissions in **Table Editor → `commissions`**.
+
+### b) Auto-email each inquiry to Nia (optional but recommended)
+
+Deploy the included Edge Function (reuses the same Resend key as the winner emails):
+
+```bash
+supabase functions deploy notify-commission
+# if you haven't already set the key:
+supabase secrets set RESEND_API_KEY=re_xxx
+# optional overrides:
+# supabase secrets set COMMISSION_TO="nia@artwithnia.com"
+# supabase secrets set COMMISSION_FROM="Art with Nia <nia@artwithnia.com>"
+```
+
+Source is in `supabase/functions/notify-commission/`. The site calls it
+automatically after saving the inquiry — you'll get an email (reply-to set to
+the sender) for every submission.
+
+---
+
 ## Deploying
 
 This is a static site (one `index.html`). Host it anywhere — Vercel, Netlify,
