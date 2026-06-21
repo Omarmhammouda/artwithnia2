@@ -249,6 +249,8 @@
   }
   .pf-track:hover .pf-slide .canvas{ opacity:.5; }
   .pf-track .pf-slide:hover .canvas{ opacity:1; }
+  /* video covers/shots fill the .canvas box just like image backgrounds */
+  video.canvas{ object-fit:cover; background:var(--paper-2); }
   .pf-carousel.is-empty .pf-track{ animation:none; width:100%; }
   .pf-empty{ padding:clamp(40px,7vw,90px) 32px; color:var(--muted); font-size:13px; letter-spacing:.05em; }
   .pf-scap{ padding:14px 16px 0; }
@@ -1141,13 +1143,31 @@ function mapPortfolioRow(r){
   };
 }
 
-// a project's gallery images (real Storage URLs)
+// a project's gallery media (real Storage URLs — images or videos)
 function projectShots(p){
   return (p.images || []).map(url => ({ image_url: url }));
 }
-// the cover image for a project's carousel slide
+// the cover media for a project's carousel slide
 function projectCover(p){
   return { image_url: p.cover_url || (p.images && p.images[0]) || null };
+}
+
+// detect video files so we can render a <video> instead of a CSS background image
+function isVideoUrl(u){
+  return typeof u === "string" && /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(u);
+}
+function videoMime(u){
+  const ext = ((String(u).split(/[?#]/)[0].match(/\.(\w+)$/) || [])[1] || "mp4").toLowerCase();
+  return { mov:"video/quicktime", m4v:"video/mp4", ogv:"video/ogg", webm:"video/webm" }[ext] || "video/mp4";
+}
+// media fill for a `.canvas` box: autoplaying muted loop video, image background, or neutral
+function mediaTag(url, cls){
+  if (isVideoUrl(url)){
+    const safe = String(url).replace(/"/g, "%22");
+    return `<video class="${cls}" autoplay muted loop playsinline preload="metadata" disablepictureinpicture>` +
+           `<source src="${safe}" type="${videoMime(url)}"></video>`;
+  }
+  return `<div class="${cls}" style="${canvasStyle({ image_url: url })}"></div>`;
 }
 
 const pfTrackEl    = document.getElementById("pfTrack");
@@ -1156,7 +1176,7 @@ const pfCarouselEl = document.getElementById("pfCarousel");
 function pfSlideHTML(p){
   return `
     <a class="pf-slide" href="#/work/${p.id}">
-      <div class="canvas" style="${canvasStyle(projectCover(p))}"></div>
+      ${mediaTag(projectCover(p).image_url, "canvas")}
       <div class="pf-scap"><span class="t">${p.title}</span><span class="yr">${p.category || ""}</span></div>
     </a>`;
 }
@@ -1221,7 +1241,7 @@ function renderWork(id){
   if (workStripEl){
     workStripEl.innerHTML = projectShots(p).map((s, k) =>
       `<figure class="ws-fig" style="animation-delay:${(0.05 * k).toFixed(2)}s">
-         <div class="canvas" style="${canvasStyle(s)}; aspect-ratio:${s.ratio || "4/5"}"></div>
+         ${mediaTag(s.image_url, "canvas")}
        </figure>`
     ).join("");
     workStripEl.scrollLeft = 0;
