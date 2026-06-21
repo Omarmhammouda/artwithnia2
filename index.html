@@ -288,14 +288,17 @@
   .work-meta .mk{ color:var(--muted); min-width:82px; }
   .work-meta .mv{ color:var(--ink); }
   .work-desc{ font-size:clamp(14.5px,1.3vw,16px); line-height:1.66; color:var(--ink-2); max-width:52ch; justify-self:end; }
-  .work-strip{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:thin; }
-  .work-strip .ws-fig{ flex:0 0 auto; width:clamp(280px,42vw,560px); scroll-snap-align:start; animation:fadeIn .5s var(--ease) both; }
-  .work-strip .canvas{
-    display:block; width:100%; aspect-ratio:4/5; position:relative; overflow:hidden; background:var(--paper-2);
+  /* project images: each keeps its natural proportions, sized by a responsive
+     height; the row scrolls horizontally and never crops the artwork */
+  .work-strip{
+    display:flex; align-items:flex-start; gap:clamp(10px,1.4vw,20px);
+    overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin; padding:0 clamp(20px,5vw,48px) 6px; scroll-padding-left:clamp(20px,5vw,48px);
   }
-  .work-strip .canvas::after{
-    content:""; position:absolute; inset:0; pointer-events:none;
-    box-shadow:inset 0 0 100px rgba(33,31,27,.14);
+  .work-strip .ws-fig{ flex:0 0 auto; scroll-snap-align:start; animation:fadeIn .5s var(--ease) both; }
+  .work-strip .ws-media{
+    display:block; height:clamp(260px,62vh,640px); width:auto; max-width:none;
+    background:var(--paper-2);
   }
 
   .back-link{
@@ -843,7 +846,8 @@
     /* portfolio: stack CTA, tighten carousel/strip */
     .pf-end{ grid-template-columns:1fr; align-items:start; gap:28px; }
     .pf-slide{ width:64vw; }
-    .work-strip .ws-fig{ width:84vw; }
+    .work-strip{ padding-inline:20px; scroll-padding-left:20px; }
+    .work-strip .ws-media{ height:min(56vh,420px); }
   }
 
   /* respect reduced-motion preferences */
@@ -1169,6 +1173,16 @@ function mediaTag(url, cls){
   }
   return `<div class="${cls}" style="${canvasStyle({ image_url: url })}"></div>`;
 }
+// natural-aspect media (real <img>/<video>) — keeps proportions, scales responsively
+function mediaTagNatural(url, cls, alt){
+  const safe = String(url || "").replace(/"/g, "%22");
+  const a = String(alt || "").replace(/"/g, "&quot;");
+  if (isVideoUrl(url)){
+    return `<video class="${cls}" autoplay muted loop playsinline preload="metadata" disablepictureinpicture>` +
+           `<source src="${safe}" type="${videoMime(url)}"></video>`;
+  }
+  return `<img class="${cls}" src="${safe}" alt="${a}" loading="lazy">`;
+}
 
 const pfTrackEl    = document.getElementById("pfTrack");
 const pfCarouselEl = document.getElementById("pfCarousel");
@@ -1241,7 +1255,7 @@ function renderWork(id){
   if (workStripEl){
     workStripEl.innerHTML = projectShots(p).map((s, k) =>
       `<figure class="ws-fig" style="animation-delay:${(0.05 * k).toFixed(2)}s">
-         ${mediaTag(s.image_url, "canvas")}
+         ${mediaTagNatural(s.image_url, "ws-media", p.title)}
        </figure>`
     ).join("");
     workStripEl.scrollLeft = 0;
