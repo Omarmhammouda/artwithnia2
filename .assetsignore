@@ -1,4 +1,9 @@
 # Keep these out of the deployed site (they're repo/docs/server source, not the site)
+.git/
+.wrangler/
+.claude/
+.DS_Store
+node_modules/
 supabase/
 SUPABASE_SETUP.md
 portfolio_template.csv
