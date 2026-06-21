@@ -288,6 +288,38 @@
   .pf-end-col a{ font-size:15px; color:var(--ink-2); width:max-content; transition:color .3s var(--ease); }
   .pf-end-col a:hover{ color:var(--accent-ink); }
 
+  /* "View all work" link under the home carousel */
+  .works-all-link{
+    display:inline-flex; align-items:center; gap:9px; margin-top:clamp(20px,3vw,34px);
+    font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink);
+    border-bottom:1px solid var(--line-2); padding-bottom:4px;
+    transition:gap .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+  }
+  .works-all-link:hover{ gap:15px; border-color:var(--ink); color:var(--accent-ink); }
+
+  /* ============ ALL WORK (grid index) ============ */
+  .works-head{ padding:clamp(40px,6vw,84px) 0 clamp(18px,3vw,32px); }
+  .works-head .eyebrow{ display:block; }
+  .works-head h1{
+    font-family:var(--serif); font-weight:400; letter-spacing:-.025em; line-height:1;
+    font-size:clamp(40px,6vw,84px); color:var(--ink); margin:14px 0 0;
+  }
+  .works-head h1 em{ font-style:italic; color:var(--accent-ink); }
+  .works-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr));
+    gap:clamp(14px,1.6vw,26px); padding:0 32px clamp(48px,6vw,90px);
+  }
+  .works-card{ display:block; cursor:pointer; }
+  .works-card .canvas{
+    display:block; width:100%; aspect-ratio:4/5; position:relative; overflow:hidden;
+    background:var(--paper-2); transition:opacity .4s var(--ease);
+  }
+  .works-card .canvas::after{ content:""; position:absolute; inset:0; pointer-events:none; box-shadow:inset 0 0 90px rgba(33,31,27,.14); }
+  .works-card:hover .canvas{ opacity:.92; }
+  .works-card .pf-scap{ padding:13px 2px 0; }
+  .works-card:hover .pf-scap .t{ color:var(--accent-ink); }
+  .works-card .pf-scap .t{ transition:color .3s var(--ease); }
+
   /* ============ PROJECT detail page (editorial) ============ */
   /* full-bleed cover hero */
   .work-hero{
@@ -920,6 +952,7 @@
     /* portfolio: stack CTA, tighten carousel/strip */
     .pf-end{ grid-template-columns:1fr; align-items:start; gap:28px; }
     .pf-slide{ width:64vw; }
+    .works-grid{ grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; padding-left:20px; padding-right:20px; }
     .work-collage{ column-count:1; padding-left:20px; padding-right:20px; }
     .work-hero{ height:clamp(220px,42vh,360px); }
     .work-nav{ flex-direction:column; gap:22px; }
@@ -955,7 +988,7 @@
   <!-- tier 2: main bar -->
   <div class="wrap head-inner">
     <nav class="main" aria-label="Primary">
-      <a href="#/" data-nav="portfolio" class="active">Portfolio</a>
+      <a href="#/works" data-nav="portfolio" class="active">Work</a>
       <a href="#/auction" data-nav="auction">Auction</a>
       <a href="#about" data-nav="about">About</a>
     </nav>
@@ -982,7 +1015,7 @@
       </button>
     </div>
     <nav class="menu-nav" aria-label="Mobile">
-      <a href="#/" data-menu-link="portfolio"><span class="idx">01</span>Portfolio</a>
+      <a href="#/works" data-menu-link="portfolio"><span class="idx">01</span>Work</a>
       <a href="#/auction" data-menu-link="auction"><span class="idx">02</span>Auction</a>
       <a href="#about" data-menu-link="about"><span class="idx">03</span>About</a>
     </nav>
@@ -1018,6 +1051,11 @@
     <div class="pf-carousel" id="pfCarousel" aria-label="Selected projects">
       <div class="pf-track" id="pfTrack"><!-- slides injected (duplicated for seamless loop) --></div>
     </div>
+    <div class="wrap">
+      <a class="works-all-link" href="#/works">View all work
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
 
     <div class="wrap">
       <section class="pf-end">
@@ -1036,10 +1074,21 @@
     </div>
   </section>
 
+  <!-- ===================== ALL WORK (grid index) ===================== -->
+  <section class="view" id="view-works">
+    <div class="wrap">
+      <header class="works-head">
+        <span class="eyebrow">Murals &amp; commissions · New York</span>
+        <h1 class="serif">Selected <em>work</em></h1>
+      </header>
+    </div>
+    <div class="works-grid" id="worksGrid"><!-- project cards injected --></div>
+  </section>
+
   <!-- ===================== PROJECT (detail) ===================== -->
   <section class="view" id="view-work">
     <div class="wrap" style="padding-top:24px">
-      <a class="back-link" href="#/">
+      <a class="back-link" href="#/works">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 12H5M11 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         All work
       </a>
@@ -1318,6 +1367,22 @@ function showPortfolioLoading(){
   pfTrackEl.innerHTML = `<div class="pf-empty">Loading…</div>`;
 }
 
+/* ---- all-work grid (#/works) ---- */
+const worksGridEl = document.getElementById("worksGrid");
+function worksCardHTML(p){
+  return `
+    <a class="works-card" href="#/work/${p.id}">
+      ${mediaTag(projectCover(p).image_url, "canvas")}
+      <div class="pf-scap"><span class="t">${p.title}</span><span class="yr">${p.category || ""}</span></div>
+    </a>`;
+}
+function renderWorksIndex(){
+  if (!worksGridEl) return;
+  worksGridEl.innerHTML = PORTFOLIO.length
+    ? PORTFOLIO.map(worksCardHTML).join("")
+    : `<div class="pf-empty">No projects yet.</div>`;
+}
+
 // fetch projects from Supabase, then render (the home carousel + any open project page)
 async function initPortfolio(){
   if (!sb){ renderPortfolio(); return; }
@@ -1330,7 +1395,7 @@ async function initPortfolio(){
     else if (data){ PORTFOLIO.length = 0; data.forEach(r => PORTFOLIO.push(mapPortfolioRow(r))); }
   } catch(e){ console.warn("[portfolio] load error:", e); }
   renderPortfolio();
-  if (location.hash.startsWith("#/work/")) route();   // re-render a deep-linked project
+  if (location.hash.startsWith("#/work")) route();   // re-render a deep-linked project or the works grid
 }
 
 /* ---- project detail page (#/work/:id) ---- */
@@ -2241,17 +2306,22 @@ document.addEventListener("pointermove",(e)=>{
    #/auction = the single product. #about scrolls to the footer.
    ============================================================ */
 const viewPortfolio = document.getElementById("view-portfolio");
+const viewWorks     = document.getElementById("view-works");
 const viewProduct   = document.getElementById("view-product");
 const viewWork      = document.getElementById("view-work");
 function route(){
   if (location.hash === "#about") return;   // footer anchor — leave the current view
   const hash      = location.hash;
   const isAuction = hash === "#/auction";
+  const isWorks   = hash === "#/works";
   const workId    = hash.startsWith("#/work/") ? hash.slice("#/work/".length) : null;
   const isWork    = !!workId;
-  viewPortfolio.classList.toggle("active", !isAuction && !isWork);
+  const isHome    = !isAuction && !isWorks && !isWork;
+  viewPortfolio.classList.toggle("active", isHome);
+  viewWorks.classList.toggle("active", isWorks);
   viewProduct.classList.toggle("active", isAuction);
   viewWork.classList.toggle("active", isWork);
+  if (isWorks) renderWorksIndex();
   if (isWork) renderWork(workId);
   // the sticky mobile action bar belongs to the auction only
   const ab = document.getElementById("actionBar");
