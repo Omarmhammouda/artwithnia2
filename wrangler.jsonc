@@ -1,7 +1,7 @@
 {
   // Static site served by Cloudflare Workers (assets-only — no server code).
   // Deploy command in Cloudflare must be: npx wrangler deploy
-  "name": "artwithnia",
+  "name": "artwithnia2",
   "compatibility_date": "2024-11-01",
   "assets": {
     "directory": "./",
