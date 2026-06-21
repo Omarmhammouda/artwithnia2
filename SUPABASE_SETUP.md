@@ -358,6 +358,79 @@ That's the whole thing — no Edge Function, no extra config. After it runs:
 
 ---
 
+## 7. Portfolio (past work)
+
+The home page shows Nia's past projects — an auto-moving carousel, and a page per
+project (`/#/work/<id>`). These come from a `portfolio` table. Until it has rows,
+the carousel shows "No projects yet."
+
+### a) Create the `portfolio` table
+
+Run this in **SQL Editor → New query**:
+
+```sql
+create table if not exists public.portfolio (
+  id          text primary key,        -- url slug, e.g. 'morning-service'
+  title       text not null,
+  year        int,
+  client      text,
+  category    text,                     -- shown under the cover, e.g. 'Café mural'
+  medium      text,
+  location    text,
+  description text,
+  cover_url   text,                     -- carousel cover image (Storage URL)
+  images      text[] default '{}',      -- project gallery images (Storage URLs, in order)
+  sort        int  default 0,           -- display order: lower shows first
+  created_at  timestamptz default now()
+);
+
+-- public can read the portfolio (no writes from the site)
+alter table public.portfolio enable row level security;
+create policy "portfolio is public read" on public.portfolio
+  for select using (true);
+```
+
+### b) Add the project images to Storage
+
+In **Storage**, use a public bucket for the photos (reuse the one you use for
+works, or create a new public bucket called `portfolio`). Upload each project's
+images, then for any file use **⋯ → Get URL** (the public URL) — that's what goes
+in `cover_url` and `images`.
+
+### c) Add projects
+
+Easiest in **Table Editor → `portfolio` → Insert row**. The `images` column takes
+a list of URLs (the editor lets you add array items one per line). Or seed them in
+SQL — here are the six starter projects (fill in your real Storage URLs):
+
+```sql
+insert into public.portfolio
+  (id, title, year, client, category, medium, location, description, cover_url, images, sort)
+values
+  ('morning-service','Morning Service',2024,'Sunday Coffee','Café mural','Acrylic on plaster · 4 × 6 m','Greenpoint, Brooklyn','A wraparound mural behind the counter — warm ochres and a low sun.', null, '{}', 1),
+  ('flow-state','Flow State',2023,'Mala Yoga','Studio mural','Interior mural · 3 × 5 m','Williamsburg, Brooklyn','Layered sage and breath-like strata for a yoga and recovery space.', null, '{}', 2),
+  ('block-party','Block Party',2024,'Bed-Stuy Alliance','Community mural','Exterior mural · 6 × 9 m','Bed-Stuy, Brooklyn','A neighborhood commission painted over two weekends with local volunteers.', null, '{}', 3),
+  ('reps-and-roses','Reps & Roses',2023,'Iron & Oak Gym','Gym mural','Interior mural · 3 × 4 m','Lower East Side, Manhattan','Terracotta blooms breaking through concrete grit.', null, '{}', 4),
+  ('tide-lines','Tide Lines',2022,'Rockaway Cantina','Restaurant mural','Mural on board · 2.5 × 6 m','Rockaway Beach, Queens','Horizontal washes of sea-glass green and salt.', null, '{}', 5),
+  ('night-bloom','Night Bloom',2024,'The Velvet Room','Commission','Triptych on canvas','Cocktail bar, Manhattan','Three plum-dark panels lit from within.', null, '{}', 6);
+
+-- then add photos to a project, e.g.:
+-- update public.portfolio
+--   set cover_url = 'https://<project>.supabase.co/storage/v1/object/public/portfolio/morning/cover.jpg',
+--       images = array[
+--         'https://<project>.supabase.co/storage/v1/object/public/portfolio/morning/1.jpg',
+--         'https://<project>.supabase.co/storage/v1/object/public/portfolio/morning/2.jpg'
+--       ]
+--   where id = 'morning-service';
+```
+
+Notes:
+- `cover_url` is optional — if blank, the first image in `images` is used as the cover.
+- Photos are cropped to fit (covers are tall 3:4, project-page images are 4:5).
+- Reorder projects by changing `sort`; the carousel and project list follow it.
+
+---
+
 ## Deploying
 
 This is a static site (one `index.html`). Host it anywhere — Vercel, Netlify,

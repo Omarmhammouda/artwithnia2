@@ -1,6 +1,7 @@
 # Keep these out of the deployed site (they're repo/docs/server source, not the site)
 supabase/
 SUPABASE_SETUP.md
+portfolio_template.csv
 wrangler.jsonc
 .assetsignore
 .gitignore

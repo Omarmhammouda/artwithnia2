@@ -1,0 +1,3 @@
+id,title,year,client,category,medium,location,description,cover_url,images,sort
+example-cafe-mural,Example — Café Mural,2024,Cafe Name,Café mural,Acrylic on plaster · 4 × 6 m,"Neighborhood, Borough","Replace with one or two sentences about the project.",https://YOUR-PROJECT.supabase.co/storage/v1/object/public/portfolio/cover.jpg,"{https://YOUR-PROJECT.supabase.co/storage/v1/object/public/portfolio/1.jpg,https://YOUR-PROJECT.supabase.co/storage/v1/object/public/portfolio/2.jpg,https://YOUR-PROJECT.supabase.co/storage/v1/object/public/portfolio/3.jpg}",1
+example-commission,Example — Commission,2023,Client Name,Commission,Triptych on canvas,"Neighborhood, Borough","Short description here. Leave images as {} until you have the photos.",,{},2
