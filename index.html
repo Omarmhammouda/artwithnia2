@@ -219,19 +219,34 @@
   @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
   @keyframes rise{ from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
 
-  /* ============ PORTFOLIO — hero + auto-moving carousel ============ */
+  /* ============ PORTFOLIO — artist hero + auto-moving carousel ============ */
   .pf-hero{
-    display:grid; grid-template-columns:1.55fr 1fr; align-items:end; gap:clamp(24px,4vw,60px);
-    padding:clamp(36px,7vw,92px) 0 clamp(30px,5vw,54px);
+    display:grid; grid-template-columns:1.05fr 0.95fr; align-items:center; gap:clamp(28px,5vw,72px);
+    padding:clamp(36px,6vw,84px) 0 clamp(30px,5vw,54px);
   }
+  .pf-hero-text .eyebrow{ display:block; }
   .pf-hero h1{
-    font-family:var(--serif); font-weight:400; letter-spacing:-.025em; line-height:.96;
-    font-size:clamp(44px,8.4vw,116px); color:var(--ink); margin:0;
+    font-family:var(--serif); font-weight:400; letter-spacing:-.025em; line-height:1;
+    font-size:clamp(40px,6vw,84px); color:var(--ink); margin:14px 0 0;
   }
+  .pf-hero h1 em{ font-style:italic; color:var(--accent-ink); }
   .pf-lead{
-    font-size:clamp(15px,1.45vw,18px); line-height:1.6; color:var(--ink-2);
-    max-width:42ch; padding-bottom:clamp(6px,1vw,18px);
+    margin-top:clamp(18px,2vw,26px); max-width:52ch;
+    font-size:clamp(15px,1.45vw,17px); line-height:1.66; color:var(--ink-2);
   }
+  .pf-quote{
+    margin:clamp(18px,2vw,26px) 0 0; max-width:46ch;
+    font-style:italic; font-size:clamp(18px,1.8vw,23px); line-height:1.35; color:var(--ink);
+  }
+  .pf-cta{ display:inline-flex; align-items:center; gap:9px; font-size:13px; letter-spacing:.02em; color:var(--ink); }
+  .pf-cta.solid{
+    background:var(--ink); color:var(--paper); padding:13px 24px; border-radius:9px;
+    box-shadow:0 16px 32px -22px rgba(0,0,0,.6); transition:background .3s var(--ease);
+  }
+  .pf-cta.solid:hover{ background:var(--accent-ink); }
+  .pf-hero .pf-cta.solid{ margin-top:clamp(20px,2.4vw,30px); }
+  .pf-portrait{ margin:0; min-height:clamp(260px,30vw,440px); background:var(--paper-2); }
+  .pf-portrait img{ display:block; width:100%; height:auto; }
 
   /* full-bleed auto-moving carousel */
   .pf-carousel{ width:100%; overflow:hidden; }
@@ -986,8 +1001,16 @@
   <section class="view active" id="view-portfolio">
     <div class="wrap">
       <header class="pf-hero">
-        <h1 class="serif">Murals for<br>Modern Spaces</h1>
-        <p class="pf-lead">Hand-painted murals and commissioned work for cafés, studios, gyms and public spaces across New York — bold, site-specific, and made to be lived with.</p>
+        <div class="pf-hero-text">
+          <span class="eyebrow">Muralist &amp; Visual Artist · New York</span>
+          <h1 class="serif">Meet <em>Nia</em></h1>
+          <p class="pf-lead">A New York–based muralist and visual artist creating custom, site-specific work for businesses and public spaces. Blending abstract elements with recognizable forms, her murals elevate interiors and strengthen brand identity — expressive yet accessible, bold and emotionally driven. From cafés and gyms to wellness and community spaces, she treats every wall as a partnership.</p>
+          <p class="pf-quote serif">“Every vision deserves to be seen — let’s bring yours to life.”</p>
+          <a class="pf-cta solid" href="mailto:nia@artwithnia.com">Start a commission</a>
+        </div>
+        <figure class="pf-portrait">
+          <img src="https://wtngjmtrxgdgoyjbqily.supabase.co/storage/v1/object/public/artworks/nia.jpg" alt="Nia — muralist and visual artist — in front of one of her works" loading="eager">
+        </figure>
       </header>
     </div>
 
